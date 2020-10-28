@@ -2023,7 +2023,7 @@
 			return;
 		}
 
-		peer = new Peer(genPredId(20), {host: true ? window.location.hostname : 'tilebattlebroker.herokuapp.com', port: true ? 9000 : (true ? window.location.port : 80), path: '/myapp', 
+		peer = new Peer(genPredId(20), {host: true ? window.location.hostname : 'tilebattlebroker.herokuapp.com', port: (true ? window.location.port : 80), path: '/myapp', 
 										config: {'iceServers': [
 												{ url: 'stun:stun.l.google.com:19302' }]}
 										});

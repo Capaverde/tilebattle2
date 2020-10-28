@@ -1,16 +1,25 @@
-const { PeerServer } = require('peer');
-const peerServer = PeerServer({ port: 9000, path: '/myapp' });
+//const { PeerServer } = require('peer');
+//const peerServer = PeerServer({ port: 9000, path: '/myapp' });
 
 
 
 
 
-
+var port = process.env.PORT || 3000;
 
 
 var express = require('express');
 var app = express();
+var expresspeerserver = require('peer').ExpressPeerServer;
+
 var http = require('http').createServer(app);
+
+var options = { debug : true };
+
+
+
+app.use('/myapp', expresspeerserver(http, options));
+
 var io = require('socket.io')(http);
 
 /* app.get('/', (req, res) => {
@@ -109,6 +118,6 @@ io.on('connection', (socket) => {
   //console.log('getrooms was received');
 //});
 
-http.listen(3000, () => {
-  console.log('listening on *:3000');
+http.listen(port, () => {
+  console.log('listening on *:'+port);
 });
