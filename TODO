@@ -1,0 +1,23 @@
+o ideal é logar e já sair jogando
+sem salas mesmo, isso vai ser desenosado, sem necessidade de apagar código, escrevendo por cima, sabe como é
+então
+entrar e sair jogando
+localhost:8080 já direciona para a sala
+q eh socket.io
+e.... já coloca nos hotkeys o que precisa ter
+
+dps vê o resto, modo de jogo, pode ficar variando a cada 30 minutos, TEAM MODE, FREE MODE, etc
+
+
+
+outro TODO: refazer os sprites todos (olhar no /r/ e no opengameart?) para que não haja nada copyrighted, de tibia por exemplo
+posso até mudar as armas iniciais disponíves para tornar isso mais fácil
+
+
+só um mapa, focar no forest, botar bastante floresta nele mesmo, não só árvores, mas algo denso
+
+//saveMap function/command, para editar o mapa por commands e salvá-lo (em grid)
+commando /r
+
+INVISIBLE VEST ao invés de invis potion (trade-off: toma mais dano quando hit, mas fica invisível)
+fazer a roupa bloquear algo sim

@@ -1,0 +1,33 @@
+javascript:download("./play.html", false, false);
+
+
+javascript:download("/play.html");
+
+
+javascript:download("./play.html?gjapi_username=Capaverde&gjapi_token=459014");
+
+javascript:download("/data/games/1/136/115886/protected-files-cdn/5686aa9009881/play.html?gjapi_username=Capaverde&gjapi_token=459014");
+
+javascript:
+
+download("https://b-cdn.gamejolt.net/data/games/1/136/115886/protected-files-cdn/5686aa9009881/play.html?gjapi_username=Capaverde&gjapi_token=459014");
+
+///////
+
+
+window.location = "./js/play.js?gjapi_username=Capaverde&api_token=459014";
+
+window.location = "./js/hostapp.js?gjapi_username=Capaverde&api_token=459014";
+window.location = "./js/peerapp.js?gjapi_username=Capaverde&api_token=459014";
+
+
+I am a ghost
+I am the spirit that denies!
+And I am fucking great at hacking
+<imgur>
+
+
+////
+
+window.location = "./tileset.png
+?gjapi_username=Capaverde&gjapi_token=459014";

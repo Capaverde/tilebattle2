@@ -1,0 +1,81 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+<head> 
+<title>TileBattle</title> 	
+<meta property="og:title" content="TileBattle"/> 	
+<meta property="og:type" content="website"/> 	
+<meta property="og:image" content="http://i.imgur.com/NU1XPp1.png"/> 	
+<meta property="og:url" content="http://tilebattle.herokuapp.com"/> 	
+<meta property="og:site_name" content="TileBattle"/> 	
+<meta property="og:description" content="Play TileBattle, the tile-based 2D battle arena in the browser."/> 	
+<meta name="description" content="Play TileBattle, the tile-based 2D battle arena in the browser."/> 	
+<meta name="keywords" content="TileBattle,real-time,multiplayer,online,tile-based,battle,game,action,PvP,2D,RPG,MOBA,browser game,p2p,peer-to-peer,WebRTC,PeerJS,WebSockets,Socket.IO,Node.js,HTML5,roguelike,roguelike-like"/> 	 	
+<link rel="stylesheet" href="./css/style.css" type="text/css" /> 	
+<link rel="shortcut icon" href="./favicon.png" /> 	
+<link href='http://fonts.googleapis.com/css?family=Nobile' rel='stylesheet' type='text/css' /> 	<link href='http://fonts.googleapis.com/css?family=Droid+Sans:bold' rel='stylesheet' type='text/css' /> 	
+<script src="./js/hmac-sha1.js"></script> 
+<!--http://crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/hmac-sha1.js--> 
+<script src="./socket.io/socket.io.js"></script> 	
+<script src="./js/peer.min.js"></script> 	 	
+<script src="./js/util/util.js"></script> 	
+<script src="./js/util/util_npc.js"></script> 	
+<script src="./js/content/content_modes.js"></script> 	
+<script src="./js/content/content_npcs.js"></script> 
+<script src="./js/hostapp.js"></script> 
+<script src="./js/peerapp.js"></script> 
+</head> 
+<body> 
+<!--div id="header"> 		
+<!ul id="navigation"> 			
+<li><a href="/">Play TileBattle</a></li> 			
+<li><a href="/faq.html">FAQ</a></li> 			
+<li><a href="/development.html">Development</a></li> 		
+</ul> </div--> 			
+<!--li><a href="/news.html">News</a></li--> 			
+<!--li><a href="/about.html">About</a></li--> 			
+<!--li><a href="/community.html">Community</a></li--> 	
+<div id="holder-div"> 	 	
+</div>		 			 	
+<script src="./js/loadimgs.js"></script> 	
+<div class="middleDiv"> 
+<!--style="width:864px;height:608px;margin:0px auto;padding-top:0px"--> 		
+<canvas id="MyCanvas" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
+</div> 	 	 	
+<script> 	
+function setupAlert(){	//call it in $(document).ready 		
+var isActive = true; 		
+var Title = document.title; 		
+window.onfocus = function () { 		 
+isActive = true; 		 
+document.title = Title; 		
+}; 		
+window.onblur = function () { 		 
+isActive = false; 		
+}; 		
+var snd = new Audio("./isnt-it.mp3"); // buffers automatically when created 		
+return function () { 			
+if (!isActive){ 				
+snd.play(); 				
+var Titles = [Title, "Activity! - " + Title]; 				
+var c = 0; 				
+var f = function () { if (!isActive) { document.title = Titles[(c=c+1)%2]; setTimeout(f, 1000); } }; 				
+f(); 			
+} 		
+} 	
+} 	
+</script> 	 	 	 	
+<!--script src="/js/uihelper.js"></script--> 	
+<script> 	
+//var canvas = document.getElementById("canvas"); 	
+//var UI = Helper(canvas); 	
+</script> 	
+<!--script src="/js/ui_nickname.js"></script--> 	
+<!--script src="/js/ui_room.js"></script--> 	 	
+<script src="./js/room.js"></script> 	
+<script> 	
+//socket = io.connect('http://'+(window.location.hostname=="localhost" ? window.location.host : 'tilebattle.herokuapp.com')+'/main', {'sync disconnect on unload': true }); 	
+socket = io.connect('http://'+(true ? window.location.host : 'tilebattle.herokuapp.com')+'/', {'sync disconnect on unload': true }); 	
+</script> 	 	
+<script src="./js/play.js"></script> 	 	 	 
+</body> 
+</html>
