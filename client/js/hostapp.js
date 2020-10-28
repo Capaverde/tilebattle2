@@ -2045,7 +2045,7 @@ NORTHEAST = 7;
 		//myAddToInv(c,11,2);	//haste potion
 		//myAddToInv(c,40,5);	//healing rune
 		myAddToInv(c,46,10);	//poison field rune	//replace with poison arrow later, plus burst arrow
-		myAddToInv(c,46,10);	//poison field rune
+		//myAddToInv(c,46,10);	//poison field rune
 		//
 		
 		client.player=c;

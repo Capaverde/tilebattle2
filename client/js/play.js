@@ -1070,6 +1070,10 @@
 	hoston('mytimelimit', function (msg) { 
 		room_game_options.timelimit = msg.value; 
 	});
+
+	hoston('myscorelimit', function (msg) {
+		room_game_options.scorelimit = msg.value;
+	});
 	
 	hoston('size_selected', function (msg) { 
 		room_game_options.size_selected = msg.value; 

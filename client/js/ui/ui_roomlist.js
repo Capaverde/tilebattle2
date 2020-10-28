@@ -55,7 +55,7 @@
 	
 	function addRoom(room,k){
 		UI.newchildobj(room_view,{type:'rect',x:2, y:24*k, width:Wid-30-105-8-2-2-16-2, height:22, color:"#6e6e6e",	//"#878787"
-		url:(!isHeroku && !isLocalhost) ? './play.html?room='+room.name :	'./room?id='+room.name,
+		url: /* (!isHeroku && !isLocalhost)*/ true ? './play.html?room='+room.name :	'./room?id='+room.name,
 		onmousedown:function () { 
 			if (selected_room)
 				selected_room.color = "#6e6e6e";

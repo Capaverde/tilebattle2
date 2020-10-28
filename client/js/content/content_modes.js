@@ -48,8 +48,8 @@ function createGrassMap(width,height){
 
 function createForestMap(width, height){
 	var grid = make2dArray(width, height, function () { return [createItem(grass2,1)]; });
-	//10% trees	//40% trees
-	for (var k=0; k < width*height/2.5; k+=1){
+	//10% trees/10	//40% trees/2.5
+	for (var k=0; k < width*height/10; k+=1){
 		var pos = newpos(R(width), R(height));
 		var tile = grid[pos.x][pos.y];
 		if(tile.length == 1){	//only grass
@@ -144,7 +144,7 @@ mapCreators = [createForestMap, createSnowMap, createDesertMap];
 
 var modes = [
 
-	{name: "Team Versus", id: 0, 
+	/* {name: "Team Versus", id: 0, 
 		start_config: function (options) {	// called each new round or each startgame? which have more than 1 round? team versus was the only one but not anymore
 									// so it doesn't matter, call it in startgame, if necessary create a start_round_config later...
 			this.state.gameover = false;
@@ -182,7 +182,7 @@ var modes = [
 		},
 		config: {},	//immutable
 		state: {gameover:false}	//aux	//mutable
-	},
+	}, */
 
 	{name: "Team Deathmatch", id: 1, 
 		start_config: function (options) {
@@ -221,7 +221,7 @@ var modes = [
 		state: {gameover:false}	//aux	//mutable
 	},
 
-	{name: "Free For All", id: 2, 
+	/* {name: "Free For All", id: 2, 
 		start_config: function (options) {
 			this.state.gameover = false;
 			this.state.options = options;
@@ -252,9 +252,9 @@ var modes = [
 		},
 		config: {free_for_all:true},	//immutable
 		state: {gameover:false}	//aux	//mutable
-	},
+	}, */
 
-	{name:"PvE Demo", id: 3, 
+	/* {name:"PvE Demo", id: 3, 
 		start_config: function (options) {
 			this.state.gameover = false;
 			this.state.options = options;
@@ -295,7 +295,7 @@ var modes = [
 		},
 		config: {},
 		state: {gameover:false}
-	}
+	} */
 	
 ];
 

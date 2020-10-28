@@ -9,6 +9,7 @@ roomTitle = false;
 function sendallinputs(conn){
 		//send configs
 		conn.send({type:'mytimelimit', value: room_game_options.timelimit});
+		conn.send({type:'myscorelimit', value: room_game_options.scorelimit});
 		conn.send({type:'size_selected', value: room_game_options.size_selected});
 		conn.send({type:'terrain_selected', value: room_game_options.map_selected});
 		conn.send({type:'gamemode_selected', value: room_game_options.mode_selected});
@@ -856,10 +857,59 @@ createObject(12, 32 + 3, 864 - 24, 3,
 
 
 
-var room_game_options = {mode_selected: 0, map_selected: 0, size_selected: 1, timelimit: 5, scorelimit: false};
+var room_game_options = {mode_selected: 0, map_selected: 0, size_selected: 1, timelimit: 5, scorelimit: 5};
 		
 
-createTextObject(314 - 16, 332, "Time limit:");
+createTextObject(314 - 16, 332, "Score limit:");
+createObject(314 - 16, 332, 0, 0,
+		function (self) { 
+			rctx.font = "12px Tahoma"; 
+			rctx.fillStyle = "#FFFFFF"; 
+			rctx.fillText(room_game_options.scorelimit, 420-16, self.y);
+		}, false, false);
+createObject(550 - 16, 332 - 15, 21, 21,
+		function (self) { 
+			if (gamestarted) 
+				return;
+			drawRect(self.x, self.y, self.width, self.height, !self.holding ? "#8e8e8e" : "#AeAeAe");
+			rctx.drawImage(setaleft, self.x, self.y); 
+			if (self.rovering && !self.holding){			
+				rctx.strokeStyle="#AeAeAe";
+				rctx.lineWidth = 1;
+				rctx.strokeRect(self.x, self.y, self.width, self.height);
+			}
+		}, 
+		function () { 
+			if (gamestarted) 
+				return;
+			room_game_options.scorelimit -= 1;
+			if (room_game_options.scorelimit < 1)
+				room_game_options.scorelimit = 1;
+			broadcast('myscorelimit', {value: room_game_options.scorelimit});
+		}, true);
+createObject(575 - 16, 332 - 15, 21, 21,
+		function (self) { 
+			if (gamestarted) 
+				return;
+			drawRect(self.x, self.y, self.width, self.height, !self.holding ? "#8e8e8e" : "#AeAeAe");
+			rctx.drawImage(setaright, self.x, self.y); 
+			if (self.rovering && !self.holding){			
+				rctx.strokeStyle="#AeAeAe";
+				rctx.lineWidth = 1;
+				rctx.strokeRect(self.x, self.y, self.width, self.height);
+			}
+		}, 
+		function () { 
+			if (gamestarted) 
+				return;
+			room_game_options.scorelimit += 1;
+			if (room_game_options.scorelimit > 20)
+				room_game_options.scorelimit = 20;
+			broadcast('myscorelimit', {value: room_game_options.scorelimit});
+		}, true);
+
+
+/* createTextObject(314 - 16, 332, "Time limit:");
 createObject(314 - 16, 332, 0, 0,
 		function (self) { 
 			rctx.font = "12px Tahoma"; 
@@ -905,7 +955,7 @@ createObject(575 - 16, 332 - 15, 21, 21,
 			if (room_game_options.timelimit > 90)
 				room_game_options.timelimit = 90;
 			broadcast('mytimelimit', {value: room_game_options.timelimit});
-		}, true);
+		}, true); */
 
 		
 var mapsizes = ["Small", "Medium", "Big"];
@@ -959,7 +1009,7 @@ createObject(575 - 16, 356 - 15, 21, 21,
 		}, true);
 
 		
-var terrains = ["Forest", "Snow", "Desert"];
+var terrains = ["Forest"]	//, "Snow", "Desert"];
 		
 createTextObject(314 - 16, 380, "Terrain:");
 createObject(314 - 16, 380, 0, 0,
