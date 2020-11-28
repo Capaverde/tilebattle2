@@ -172,7 +172,7 @@ var modes = [
 					var res = reds.length > blues.length ? RED : BLUE;
 					timer_locked = true;	//locks the time counter
 					broadcast('countdown', {value:resultend[res], color:resultc[res]});
-					broadcast('statusmessage', {text:resultendst[res] + " (" + score[RED] + "x" + score[BLUE] + ")", which:false});
+					broadcast('statusmessage', {text:resultend[res] + " (" + score[RED] + "x" + score[BLUE] + ")", which:false});
 					schedule = []; 
 					schedulecount = 0;
 					addschedule(stopgame, 10);
@@ -209,7 +209,7 @@ var modes = [
 				} else {	//>=scorelimit, match ended
 					timer_locked = true;	//locks the time counter
 					broadcast('countdown', {value:resultend[res], color:resultc[res]});
-					broadcast('statusmessage', {text:resultendst[res] + " (" + score[RED] + "x" + score[BLUE] + ")", which:false});
+					broadcast('statusmessage', {text:resultend[res] + " (" + score[RED] + "x" + score[BLUE] + ")", which:false});
 					schedule = []; 
 					schedulecount = 0;	//<<= (no node) não altera o schedulecount do hostapp ! // método clearSchedules ?
 					addschedule(stopgame, 10);

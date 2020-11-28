@@ -1141,7 +1141,7 @@
 		id_names[data.id]={id:data.id,name:data.name,team:data.team};	//teams: 0 spec, 1 red, 2 blue
 		updateNames();
 		appendText("* "+data.name+" has joined the room");
-		alerter();
+		//alerter();
 	});
 	
 	hoston('names', function (data){
@@ -1191,7 +1191,7 @@
 						{id:18,blocking:true,movable:false,stackable:false,imgid:18},						//red player
 						{id:19,blocking:true,movable:false,stackable:false,imgid:19},						//blue player
 						{id:20, blocking:true, movable:false, stackable:false, imgid:20, pathblocking:false},	//bush
-						{id:21, blocking:false, movable:false, stackable:false, imgid:21, x_repeat:2, y_repeat:2},//grass with texture
+						{id:21, blocking:false, movable:false, stackable:false, imgid:21, x_repeat:2, y_repeat:2},	//grass with texture
 						{id:22,blocking:true,movable:false,stackable:false,imgid:22,pathblocking:true},		//fir tree
 						{id:23,blocking:true,movable:false,stackable:false,imgid:23},						//branch
 						{id:24,blocking:false,movable:false,stackable:false,imgid:24},						//snow
@@ -1932,23 +1932,28 @@
 							console.log("hostid is "+hostid);
 							if (hostid!=myid){
 								console.log(data.serveraddress);
-								conn = (!data.server) ? peer.connect(hostid) : io.connect(data.serveraddress, {'sync disconnect on unload': true });	//data.id is namespace
+								conn = (!data.server) ? peer.connect(hostid) : socket; //io.connect(data.serveraddress, {'sync disconnect on unload': true });	//data.id is namespace
 								if (data.server){
 									conn.send = function (data) {
-										conn.emit('data', data);
+										//conn.emit('data', data);
+										socket.emit('data', data); //para hostapp tratar
 									}
 								}
 								
 								drawingConnectingSignaling = false;
 								drawingConnectingHost = true;
 								
-								conn.on(!data.server ? 'open' : 'connect', function(){
-									console.log(peer);
-									console.log(conn);
-								  console.log('sending');
-								  conn.send({type:'name',name:name_,id:myid});//envia name
-								  //syncToHost();
-								});
+								if (!data.server){
+									conn.on(/*!data.server ?*/ 'open' /*: 'connect'*/, function(){
+										console.log(peer);
+										console.log(conn);
+									  console.log('sending');
+									  conn.send({type:'name',name:name_,id:myid});//envia name
+									  //syncToHost();
+									});
+								} else {
+								    conn.send({type:'name',name:name_,id:myid});//envia name
+								}
 								conn.on('data', function(data){
 									for (var i=0;i<hostcallbacks.length;i+=1){
 										var d=hostcallbacks[i];

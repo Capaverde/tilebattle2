@@ -191,7 +191,7 @@ function limitpos(cpos,pos,range) {
 
 //Url meddling
 
-if (typeof window !== 'undefined'){
+if (typeof window !== 'undefined' && window.location){
 	QueryString = (function(a) {	//usage: paramvalue = QueryString["param"]
 		if (a == "") return {};
 		var b = {};

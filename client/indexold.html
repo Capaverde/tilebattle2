@@ -10,7 +10,12 @@
 <meta property="og:description" content="Play TileBattle, the tile-based 2D battle arena in the browser."/> 	
 <meta name="description" content="Play TileBattle, the tile-based 2D battle arena in the browser."/> 	
 <meta name="keywords" content="TileBattle,real-time,multiplayer,online,tile-based,battle,game,action,PvP,2D,RPG,MOBA,browser game,p2p,peer-to-peer,WebRTC,PeerJS,WebSockets,Socket.IO,Node.js,HTML5,roguelike,roguelike-like"/> 	
+<link rel="stylesheet" href="./css/style.css" type="text/css" /> 	
 <link rel="shortcut icon" href="./favicon.png" /> 	
+<link href='http://fonts.googleapis.com/css?family=Nobile' rel='stylesheet' type='text/css' /> 	
+<link href='http://fonts.googleapis.com/css?family=Droid+Sans:bold' rel='stylesheet' type='text/css' /> 	
+<script src="./js/ui/uihelper.js"></script> 	
+<script src="./js/util/util.js"></script> 
 <meta http-equiv="refresh" content="0; URL='/play.html?room=permaroom'" />
 </head> 
 <body> 	
@@ -26,5 +31,31 @@
 <div class="middleDiv">	<!-- style="width:864px;margin:0px auto;" --> 		
 <canvas id="canvas" width="864" height="608" > 			This browser or document mode doesn't support canvas</canvas> 	
 </div> 	
+<script src="./socket.io/socket.io.js"></script> 	 	
+<script> 	
+var canvas = document.getElementById("canvas"); 	
+var UI = Helper(canvas); 	
+</script> 	
+<script src="./js/ui/ui_nickname.js"></script> 	
+<script src="./js/ui/ui_roomlist.js"></script> 	
+<script src="./js/ui/ui_createroom.js"></script> 	
+<script> 	 	
+//get rooms from socket and push them into roomlist 	
+//socket = io.connect('http://'+(isLocalhost ? window.location.host : 'tilebattle.herokuapp.com')+'/main', {'sync disconnect on unload': true }); 	
+socket = io.connect('http://'+(true ? window.location.host : 'tilebattle.herokuapp.com')+'/', {'sync disconnect on unload': true }); 	
+socket.on("connect", function () { socket.send("hello!"); socket.emit("salutations", "ruser"); socket.emit("getrooms"); });
+
+socket.on("roomlist", receiveRooms); 	
+
+socket.on("roomcreated", function (msg) { 		
+    window.location = /* (!isHeroku && !isLocalhost) */ true ? "./play.html?room="+msg.room : "./room?id="+msg.room; 	
+}); 	 	
+
+//socket.emit("getrooms"); 	 	 	
+
+UI.setstate(STATE_NICKNAME); 	 	
+UI.start(); 	 	
+
+</script> 
 </body> 
 </html>

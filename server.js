@@ -16,7 +16,7 @@ var http = require('http').createServer(app);
 
 var options = { debug : true };
 
-
+var hostapp = require('./client/js/hostapp');
 
 app.use('/myapp', expresspeerserver(http, options));
 
@@ -31,6 +31,8 @@ app.get('/play.html', (req, res) => {
 }); */
 
 app.use(express.static('./client'));
+
+
 
 //appt.get('/js/play.js' 
 
@@ -52,10 +54,32 @@ var rooms = [];  //room list for viewing
 var room_passes = {};
 var realrooms = {};
 
+
+var permaroom = {name:/*genPredId(10)*/"permaroom", title:"Permaroom", haspass: "No", players: 0, max_players: 100};
+rooms.push(permaroom);
+room_passes[permaroom.name] = {name:permaroom.name, pass:false};
+realrooms[permaroom.name] = {name:permaroom.name, players:[], sockets:[], host:false, room:permaroom, server:true, serveraddress: "127.0.0.1:3000"};
+
+hostapp.startgame({size_selected:1});
+
+
+
+
+
 io.on('connection', (socket) => {
     console.log('a user connected');
     //socket.emit("greetings");
     socket.on('message', function (data) { console.log("message", data); });
+
+/*
+        realrooms[permaroom.name].players.push(data.id);
+        realrooms[permarooom.name].sockets.push(socket);
+        socket.room = permaroom;
+        socket.myid = data.id;
+        socket.emit('hostid', {id:realrooms[permaroom.name].host});
+        realrooms[data.room].room.players += 1;
+*/
+
 
     socket.on("getrooms", function () { 
         console.log("getrooms");
@@ -79,14 +103,21 @@ io.on('connection', (socket) => {
         console.log('start', data); 
         if (!realrooms[data.room] || realrooms[data.room].players.length == 0){
             if (!realrooms[data.room]) { return; }
-            //the first to login is the host
-            realrooms[data.room].host = data.id;
+            //the first to login is the host, excepto quando server=true
+	    if (!realrooms[data.room].server){
+	        realrooms[data.room].host = data.id;
+	    }
         }
         realrooms[data.room].players.push(data.id);
         realrooms[data.room].sockets.push(socket);
         socket.room = data.room;
         socket.myid = data.id;
-        socket.emit('hostid', {id:realrooms[data.room].host});
+	if (!realrooms[data.room].server){
+	    socket.emit('hostid', {id:realrooms[data.room].host});
+	} else {
+	    socket.emit('hostid', {id:-1, server: true, serveraddress: realrooms[data.room].serveraddress});
+	    hostapp.onconnection(socket);
+	}
         realrooms[data.room].room.players += 1;
       
     });

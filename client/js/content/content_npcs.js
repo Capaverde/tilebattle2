@@ -137,9 +137,9 @@ var skeleton_npc = function (self, creatures, interval) {
 
 
 
-function setupnpcs(){
+//function setupnpcs(){
 	npcs = {
-		dragon: {name: "Dragon", imgid: 33, hp: 60, spells: [spells.castFB] ,behavior: function (self, creatures, interval) {
+		dragon: {name: "Dragon", imgid: 33, hp: 60, spells: [] ,behavior: function (self, creatures, interval) {
 			//moveByDir(self, R(4));
 			skeleton_npc(self, creatures, interval);
 		},
@@ -155,4 +155,4 @@ function setupnpcs(){
 	if (typeof exports != "undefined"){
 		global.npcs = npcs;
 	}
-}
+//}

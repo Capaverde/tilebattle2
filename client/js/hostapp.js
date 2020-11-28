@@ -88,10 +88,10 @@ if (!isnode){
 	}
 	function sendallinputs(conn){
 			//send configs
-			conn.send({type: 'mytimelimit', value: game_options.timelimit});
-			conn.send({type: 'size_selected', value: game_options.size_selected});
-			conn.send({type: 'terrain_selected', value: game_options.map_selected});
-			conn.send({type: 'gamemode_selected', value: game_options.mode_selected});
+			conn.send({type: 'mytimelimit', value: room_game_options.timelimit});
+			conn.send({type: 'size_selected', value: room_game_options.size_selected});
+			conn.send({type: 'terrain_selected', value: room_game_options.map_selected});
+			conn.send({type: 'gamemode_selected', value: room_game_options.mode_selected});
 
 			conn.send({type: 'lockedNames', value: true});
 	}
@@ -300,8 +300,13 @@ function broadcast(name,data,conn){	//host
 							} else {
 								conn.stamp_offset = conn.stamps.reduce(function (a,b) {return a+b;})/conn.stamps.length;	//the average
 								conn.send({type:"sync'd"});
-								if (isnode)
-									selectedToRed(conn);
+								if (isnode){
+									if (red_team.length <= blue_team.length){
+										selectedToRed(conn);
+									} else {
+										selectedToBlue(conn);
+									}
+								}
 							}
 						});
 	peeron('ping', function (conn, msg) {
@@ -1615,7 +1620,7 @@ NORTHEAST = 7;
 		update_S();
 	}
 	
-	setupnpcs();
+	//setupnpcs();
 
 	/*behaviors = {};
 	
@@ -1763,14 +1768,14 @@ NORTHEAST = 7;
 					;
 				} //else, was killed by a player's summon's summon, was kiled by a monster's summon, etc , also, change the frags to check summons?
 				fragsH[t.peerid].deaths++;
-				if (t.lasthitcreature != t && !t.lasthitcreature.npc && (modes[game_options.mode_selected].config.free_for_all || t.lasthitcreature.team != t.team))	//not a 'Team' mode, or different teams
+				if (t.lasthitcreature != t && !t.lasthitcreature.npc && (modes[room_game_options.mode_selected].config.free_for_all || t.lasthitcreature.team != t.team))	//not a 'Team' mode, or different teams
 					fragsH[t.lasthitcreature.peerid].kills++;
 				var tile = getTileH(t.pos.x,t.pos.y);
 				if (!tile) return;
 				//dropItems(t,tile);	//could be moved to onPlayerDeath? // not for now
                                 dropItems2(t,tile);
 				csocketemit(t,{type:"emptyInventory"});
-				modes[game_options.mode_selected].onPlayerDeath(t, scoreH);
+				modes[room_game_options.mode_selected].onPlayerDeath(t, scoreH);
 			}
 			updateNicks();	//he died, nick disappears
 		}
@@ -1996,7 +2001,7 @@ NORTHEAST = 7;
 			console.log("Deslogou antes de criar");	
 			return;	
 		}
-		if (game_options.mode_selected == FREE_FOR_ALL) 
+		if (room_game_options.mode_selected == FREE_FOR_ALL) 
 			team = 3;
 		var c = createCreature(team==1 ? spawnRed() : (team==2 ? spawnBlue() : spawnRandom()), playershp, team==1 ? redplayer : team==2 ? blueplayer : greenplayer);
 		var TRIES = 100;
@@ -2100,7 +2105,7 @@ NORTHEAST = 7;
 	var resultc = ['white', 'red', 'blue'];
 	
 	function detectWin(){
-		modes[game_options.mode_selected].detectWin(creaturesH, fragsH, scoreH, [false, reds, blues, greens]);
+		modes[room_game_options.mode_selected].detectWin(creaturesH, fragsH, scoreH, [false, reds, blues, greens]);
 	}
 	
 	function refreshScore(){
@@ -2141,8 +2146,8 @@ NORTHEAST = 7;
 		decays = [];
 		schedule = [];
 		
-		grid = modes[game_options.mode_selected].map()(WwidthH, WheightH);	//different treatment for different types e.g. generators, hard data, etc
-		modes[game_options.mode_selected].onStartup(grid);
+		grid = modes[room_game_options.mode_selected].map()(WwidthH, WheightH);	//different treatment for different types e.g. generators, hard data, etc
+		modes[room_game_options.mode_selected].onStartup(grid);
 		imagegrid = grid.map(function (ys) { return ys.map(function (tile) { return makeimagetile(tile); })});
 
 
@@ -2243,7 +2248,7 @@ NORTHEAST = 7;
 	var timelimit;
 	var scorelimit;
 
-	var game_options;
+	var room_game_options;
 
 	var map_sizes = [{x:25,y:15},{x:50,y:30},{x:100,y:60}];
 	
@@ -2282,7 +2287,7 @@ NORTHEAST = 7;
 		//room
 		WwidthH = map_sizes[options.size_selected].x;
 		WheightH = map_sizes[options.size_selected].y;
-		friendlyfire = true;
+		friendlyfire = false;	//true;
 		playershp = 40;
 		var s = find_spawn(WwidthH, WheightH);
 		redspawn = {x:s.xr, y:s.yr};
@@ -2301,7 +2306,7 @@ NORTHEAST = 7;
 			return;
 		}
 		
-		game_options = options;
+		room_game_options = options;
 		
 		showCanvas();
 		
@@ -2328,6 +2333,9 @@ NORTHEAST = 7;
 //} //close setuphost
 
 if (isnode){
+	require("./util/util.js");
+	require("./content/content_modes");
+
 	function getTime(){
 		return new Date().getTime();
 	}
@@ -2344,11 +2352,11 @@ if (isnode){
 		getTimeStamp(conn);
 	}
 	
-	function selectedToRed(conn){
+	function selectedToTeam(conn, team){	//red=1, blue=2
 		var i = id_names[conn.peer];
 		if (!i)	{	console.log("Deslogou antes de criar"); return; }
 		var lastteam = i.team;
-		i.team=1;
+		i.team=team;
 		conns.forEach(function(conn2){conn2.send({type:'team',id:i.id,team:i.team,ffa:true})});
 		updateNames();
 		if (gamestarted){
@@ -2363,6 +2371,14 @@ if (isnode){
 			//createCreature
 			totalCreate(i.id,i.team);
 		}
+	}
+
+	function selectedToRed(conn){
+		return selectedToTeam(conn, 1);
+	}
+
+	function selectedToBlue(conn){
+		return selectedToTeam(conn, 2);
 	}
 	
 	//exports.setuphost = setuphost;
