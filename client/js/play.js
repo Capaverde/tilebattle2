@@ -1428,6 +1428,7 @@
 	document.body.addEventListener('keyup', keyUnpressed);
 	  
 	  
+
 	// Mouse events
 	
 	followthemouse = 0;
@@ -1435,6 +1436,7 @@
 	mouseDown = false;
 	mouseposx = 0;
 	mouseposy = 0;
+
 	
 	dragfrom=0;
 	dragfromx=0;
@@ -1714,6 +1716,68 @@
 		}
 	}
 	
+
+
+	//Touch events
+
+        touching = false;
+	touchingmap = false
+	touchfromx=false;
+	touchfromy=false;
+
+        window.mytouchstart = function(ev){
+               console.log("touchstart");
+		touching = true;
+		var x = ev.changedTouches[0].clientX-canvasposition.left;
+                var y = ev.changedTouches[0].clientY-canvasposition.top;
+                //dragfromcx = x; dragfromcy=y;
+                ev.preventDefault();
+                var d = getDragXY(x,y);
+                //dragfrom = d.drag; dragfromx=d.dragx; dragfromy=d.dragy; dragfrom_origx=d.origx; dragfrom_origy=d.origy;
+		if (d.drag == "map"){
+			touchingmap=true;
+			touchfromx=d.dragx;
+			touchfromy=d.dragy;
+		}
+
+        };
+        window.mytouchend = function (ev){
+		console.log("touchend");
+		if (touching && touchingmap){
+			var x = ev.changedTouches[0].clientX-canvasposition.left;
+                	var y = ev.changedTouches[0].clientY-canvasposition.top;
+                	//dragfromcx = x; dragfromcy=y;
+                	ev.preventDefault();
+                	var d = getDragXY(x,y);
+                	//dragfrom = d.drag; dragfromx=d.dragx; dragfromy=d.dragy; dragfrom_origx=d.origx; dragfrom_origy=d.origy;
+                	if (d.drag == "map"){
+                	        //touchingmap=true;
+                	        //touchfromx=d.dragx;
+                	        //touchfromy=d.dragy;
+				if (touchfromx != d.dragx || touchfromy != d.dragy){
+					var dir = dirBetween(newpos(touchfromx,touchfromy),newpos(d.dragx,d.dragy),true)
+					dirMove(dir);
+				} else {
+					dragfrom=dragto="map";
+					dragtox=d.dragx;
+					dragtoy=d.dragy;
+					processClick();
+				}
+                	}
+		}
+
+                touching = false;
+		touchingmap=false;
+        };
+        window.mytouchmove = function(ev){
+		console.log("touchmove");
+	};
+
+	document.body.addEventListener("touchstart", mytouchstart);
+	document.body.addEventListener("touchend", mytouchend);
+	document.body.addEventListener("touchmove", mytouchmove);
+
+
 	
 	// Some util
 	
