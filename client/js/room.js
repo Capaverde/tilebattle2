@@ -359,7 +359,7 @@ GAMEONLY = 2;
 function appendText(text, name, which, team_){
 	var name0 = name;
 	if (!name) name0 = name = ""; else { name0+=": ";}
-	if (team_ && gamemode_selected == 2) team_ = 3;
+	if (team_ && room_game_options.mode_selected == 2) team_ = 3;
 	var msg = [text,name0,gamestarted ? team_ : 0];
 	newmessages.push(msg);
 	if (which != GAMEONLY){

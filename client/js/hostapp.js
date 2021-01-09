@@ -2426,7 +2426,7 @@ if (isnode){
 								broadcast("leave", data);
 							} else if (data.type=="name"){
 								if (data.name.length==0){
-									data.name = "defaultname";
+									data.name = "nameless";	//"defaultname";
 								} else if(data.name.length>20){
 									data.name = data.name.substring(0,20);
 								}
