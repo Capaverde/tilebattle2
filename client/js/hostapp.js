@@ -2280,7 +2280,7 @@ NORTHEAST = 7;
 		options.size_selected = options.size_selected || 0;	//small
 		options.map_selected = options.map_selected || 0;	//forest
 		options.timelimit = options.timelimit || 5;			//minutes
-		options.scorelimit = false;
+		options.scorelimit = options.scorelimit || 10;
 
 		modes[options.mode_selected].start_config(options);
 		

@@ -60,7 +60,8 @@ rooms.push(permaroom);
 room_passes[permaroom.name] = {name:permaroom.name, pass:false};
 realrooms[permaroom.name] = {name:permaroom.name, players:[], sockets:[], host:false, room:permaroom, server:true, serveraddress: "127.0.0.1:3000"};
 
-hostapp.startgame({size_selected:1});
+app_game_options = {size_selected:1};
+hostapp.startgame(app_game_options);
 
 
 
