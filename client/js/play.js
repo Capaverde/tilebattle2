@@ -1298,6 +1298,7 @@
 			}
 		}
 		if (touching && touchingmove){
+			console.log("dirMove", touchfromx);
 			dirMove(touchfromx);
 		}
 	}
@@ -1494,14 +1495,15 @@
 			dragy = Math.floor(y/32);
 			if (dragy==1) { dragx+=5; }
 			if (dragx==10) { dragx=0; }
-		} else if (x>=33 && x<=128 && y>=356 && y<=451) {
+		} else if (x>=33+608 && x<=128+608 && y>=356 && y<=451) {
 			drag="movebuttons";
-			var x = Math.floor((x-33)/32);
+			var x = Math.floor((x-(33+608))/32);
 			var y = Math.floor((y-356)/32);
 			dragx = movebuttontable[y*3+x];
 			if (!dragx && dragx != NORTH){
 				drag = false;
 			}
+			console.log("movebuttons", x,y,dragx);
 		} else {
 			drag=false;
 		}
@@ -1757,6 +1759,7 @@
 			touchingmove=true;
 			touchfromx=d.dragx;	//dir
 			//touchfromy=d.dragy;
+			console.log("d.drag==movebuttons",touchingmove,touchfromx);
 		}
         };
         window.mytouchend = function (ev){
@@ -1786,6 +1789,7 @@
 
                 touching = false;
 		touchingmap=false;
+		touchingmove=false;
         };
         window.mytouchmove = function(ev){
 		console.log("touchmove");
