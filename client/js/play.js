@@ -2227,6 +2227,7 @@
 			//Current Fix:
 			peer.id = last_id;
 			peer._lastServerId = last_id;
+			appendText("* Disconnected");
 			console.log("reconnecting:",peer.id, peer._lastServerId);
 			peer.reconnect();
 			reconnected = true;
