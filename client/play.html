@@ -75,7 +75,7 @@ f();
 <script src="./js/room.js"></script> 	
 <script> 	
 //socket = io.connect('http://'+(window.location.hostname=="localhost" ? window.location.host : 'tilebattle.herokuapp.com')+'/main', {'sync disconnect on unload': true }); 	
-socket = io.connect('http://'+(true ? window.location.host : 'tilebattle.herokuapp.com')+'/', {'sync disconnect on unload': true }); 	
+socket = io.connect(window.location.protocol+'//'+(true ? window.location.host : 'tilebattle.herokuapp.com')+'/', {'sync disconnect on unload': true }); 	
 </script> 	 	
 <script src="./js/play.js"></script> 	 	 	 
 </body> 
