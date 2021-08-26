@@ -348,6 +348,8 @@
 	function drawWorld(){
 		if (!world || !gamestarted) return;
 		var me;
+		var size=13; //sizexsize tiles
+		var h=(size-1)/2;
 		if (inworld(playerpos))
 			me = topItem(world[playerpos.x][playerpos.y]);
 		var creatures = [];
@@ -358,7 +360,7 @@
 				var tile = !world[tx] ? false : world[tx][ty];
 				if(!tile) {
 					ctx.fillStyle="#000000"; 
-					ctx.fillRect((x+9)*32-OFFSET.x,(y+9)*32-OFFSET.y,32,32);
+					ctx.fillRect((x+h)*32-OFFSET.x,(y+h)*32-OFFSET.y,32,32);
 					tile = [];//[48];	//void
 				}
 				for (var k=0;k<tile.length;k+=1){
@@ -368,12 +370,12 @@
 							var x_repeat =  itemtypes[imgid].x_repeat;
 							var y_repeat =  itemtypes[imgid].y_repeat;
 							var idx = mod(ty,y_repeat)*x_repeat + mod(tx,x_repeat);		//(ty%y_repeat)*x_repeat + (tx%x_repeat);
-							drawImage(imglist[imgid][idx],(x+9)*32-OFFSET.x,(y+9)*32-OFFSET.y);
+							drawImage(imglist[imgid][idx],(x+h)*32-OFFSET.x,(y+h)*32-OFFSET.y);
 						} else {
-							drawItemid(imgid,(x+9)*32-OFFSET.x,(y+9)*32-OFFSET.y);
+							drawItemid(imgid,(x+h)*32-OFFSET.x,(y+h)*32-OFFSET.y);
 						}
 					} else {
-						//drawItemid(tile[k].imgid,(x+9)*32,(y+9)*32);
+						//drawItemid(tile[k].imgid,(x+h)*32,(y+h)*32);
 						creatures.push(tile[k]);
 					}
 				}
@@ -383,7 +385,7 @@
 		for (var i in creatures){
 			var c = creatures[i];
 			if (!c.walking) {
-				drawItemid(c.imgid,(c.pos.x-playerpos.x+9)*32-OFFSET.x,(c.pos.y-playerpos.y+9)*32-OFFSET.y);
+				drawItemid(c.imgid,(c.pos.x-playerpos.x+h)*32-OFFSET.x,(c.pos.y-playerpos.y+h)*32-OFFSET.y);
 				c.frompos = c.pos;
 				c.t = 0;
 			} else {
@@ -396,7 +398,7 @@
 					c.walkstart = 0;
 					c.t=1;
 				}
-				drawItemid(c.imgid,Math.floor((lerp(c.frompos.x,c.pos.x,c.t)-playerpos.x+9)*32)-OFFSET.x,Math.floor((lerp(c.frompos.y,c.pos.y,c.t)-playerpos.y+9)*32)-OFFSET.y);
+				drawItemid(c.imgid,Math.floor((lerp(c.frompos.x,c.pos.x,c.t)-playerpos.x+h)*32)-OFFSET.x,Math.floor((lerp(c.frompos.y,c.pos.y,c.t)-playerpos.y+h)*32)-OFFSET.y);
 			}
 		}
 		for (var i in creatures){
@@ -410,24 +412,26 @@
 	}
 	  
 	function drawHP(){
+		var invpos=13*32;
 		ctx.fillStyle="#640000";
-		ctx.fillRect(608+128,32*3-16+8,96,8);
+		ctx.fillRect(invpos+128,32*3-16+8,96,8);
 		ctx.fillStyle="#FF0000";
-		ctx.fillRect(608+128,32*3-16+8,Math.max(0,hp/maxhp*96),8);
+		ctx.fillRect(invpos+128,32*3-16+8,Math.max(0,hp/maxhp*96),8);
 	}
 	  
 	function drawInventory(){
-		drawImage(invimg,608,0);
+		var pos=13*32;
+		drawImage(invimg,pos,0);
 		ctx.fillStyle = "#000000"; ctx.font = "bold 12px Tahoma";
 		
 		for (var x=0;x<8;x++)
 		for (var y=0;y<3;y++){
 			var item = inventory.items[x][y];		//supposed to be {count:,imgid:}, might be false/undefined
 			if (item){
-				//ctx.drawImage(imglist[item.imgid],608+x*32,224+y*32);
-				drawItemid(item.imgid,608+x*32,224+y*32);
+				//ctx.drawImage(imglist[item.imgid],pos+x*32,224+y*32);
+				drawItemid(item.imgid,pos+x*32,224+y*32);
 				if (itemtypes[item.imgid].stackable){	//(stackablelist[item.imgid]){
-				  drawImage(numberlist[item.count],608+x*32,224+y*32);	//how many you've got
+				  drawImage(numberlist[item.count],pos+x*32,224+y*32);	//how many you've got
 				}
 			}
 		}
@@ -435,26 +439,26 @@
 		for (var y=0;y<4;y++){
 			var item = inventory.equips[equiptable[x][y]];
 			if (item){
-				//ctx.drawImage(imglist[item.imgid],608+x*32,64+y*32);
-				drawItemid(item.imgid,608+x*32,64+y*32);
+				//ctx.drawImage(imglist[item.imgid],pos+x*32,64+y*32);
+				drawItemid(item.imgid,pos+x*32,64+y*32);
 				if (itemtypes[item.imgid].stackable){	//stackablelist[item.imgid]){
-				  drawImage(numberlist[item.count],608+x*32,64+y*32);	//how many you've got
+				  drawImage(numberlist[item.count],pos+x*32,64+y*32);	//how many you've got
 				}
 			} else if (emptyeqimgs[x][y]){
-				drawImage(emptyeqimgs[x][y],608+x*32,64+y*32);
+				drawImage(emptyeqimgs[x][y],pos+x*32,64+y*32);
 			}
 		}
 		
 		ctx.fillStyle = "#404040"; //"rgba(63, 63, 63, 1.0)"; //"#000000";
 		ctx.font = "32px Arial";
 		
-		for (var x=0;x<=9;x++){//hotkeys
+		for (var x=0;x<=9;x++){ //hotkeys
 			var hk = hotkeys[x];
 			var xx = x;
 			var yy = 0;
 			if (xx==0){xx=10;}
 			if (xx>5) {yy=1; xx-=5;}
-			var x_ = 608+96+(xx-1)*32;
+			var x_ = pos+96+(xx-1)*32;
 			var y_ = yy*32;
 			
 			ctx.textAlign = "center";
@@ -469,7 +473,7 @@
 		}
 		drawHP();
 		if (hp<=0){
-			//ctx.fillText("Dead.",608+160,(96-10)+15);
+			//ctx.fillText("Dead.",pos+160,(96-10)+15);
 		}
 		if (followthemouse > 0){
 			//drawImage(imglist[followthemouse],mouseposx-16,mouseposy-16);
@@ -489,7 +493,7 @@
 				}
 				var frompos=worldtoscreen(eff.frompos);
 				var drawpos = {x:(frompos.x+eff.vec.x*t)*32,y:(frompos.y+eff.vec.y*t)*32}
-				if (Math.abs(drawpos.x)<608 && Math.abs(drawpos.y)<608){
+				if (Math.abs(drawpos.x)<13*32 && Math.abs(drawpos.y)<13*32){
 					if (distanimationlist[eff.id].length){ //it is an array
 						var dir = dirBetween(eff.frompos, eff.topos, distanimationlist[eff.id].length>4);
 						drawImage(distanimationlist[eff.id][dir],drawpos.x-OFFSET.x,drawpos.y-OFFSET.y);
@@ -586,6 +590,7 @@
 	var last_time = 0;
 	
 	function drawgame(){
+		var invpos = 13*32;
 		if (!world || !gamestarted) return;
 
 		if ((team == 0 || hp<=0) && positions.length>0 && positions_index>-1) {	//speccing
@@ -602,7 +607,7 @@
 		/*if (followthemouse){
 			canvas.style.cursor = "none";
 		} else */
-		if (followthemouse || (mouseposx<608-9 && (inventory.equips[LEFT] || inventory.equips[RIGHT]))){
+		if (followthemouse || (mouseposx<invpos-9 && (inventory.equips[LEFT] || inventory.equips[RIGHT]))){
 			if (!canvascrosshair){
 				canvas.style.cursor = "url(./sprites/crosshair-best.png) 9 9, auto";
 				canvascrosshair = true;
@@ -613,7 +618,7 @@
 		}
 		
 		var weapon = (inventory.equips[LEFT] || inventory.equips[RIGHT]);
-		if (mouseposx<608-9 && weapon && getCookie("debugline")=="1"){
+		if (mouseposx<invpos-9 && weapon && getCookie("debugline")=="1"){
 			var state = {};
 			var topos = screentoworld(mouseposx,mouseposy)
 			var range = itemtypes[weapon.imgid].range;
@@ -650,11 +655,11 @@
 			//draw coordinates
 			ctx.fillStyle = "#FFFFFF";
 			ctx.font = "20px Tahoma";
-			ctx.fillText(playerpos.x+", "+playerpos.y, 608-ctx.measureText(playerpos.x+", "+playerpos.y).width-5, 608-5-ctx.font.substr(0,ctx.font.indexOf("px")));
+			ctx.fillText(playerpos.x+", "+playerpos.y, invpos-ctx.measureText(playerpos.x+", "+playerpos.y).width-5, invpos-5-ctx.font.substr(0,ctx.font.indexOf("px")));
 			//draw ping
-			ctx.fillText(my_ping, 608-ctx.measureText(my_ping).width-5, 608-5);
+			ctx.fillText(my_ping, invpos-ctx.measureText(my_ping).width-5, invpos-5);
 			//draw fps
-			ctx.fillText(Math.floor(1000/delta_time) + " fps", 0+5, 608-5);
+			ctx.fillText(Math.floor(1000/delta_time) + " fps", 0+5, invpos-5);
 		}
 		
 		drawEffects();
@@ -687,8 +692,8 @@
 				ctx.font="bold 15px Times New Roman"; 
 			}
 			var wid = ctx.measureText(text).width;
-			if (wid+left>608){
-				text = cropToWidth(text,608-left);
+			if (wid+left>invpos){
+				text = cropToWidth(text,invpos-left);
 			}
 			ctx.fillStyle = color;
 			ctx.lineWidth = 2;
@@ -699,8 +704,8 @@
 		}
 		if (talking){
 			var text='> '+talking_string;
-			if (ctx.measureText(text).width>608-10-ctx.measureText('_').width)
-				text = cropToWidth(text,608-10-ctx.measureText('_').width);
+			if (ctx.measureText(text).width>invpos-10-ctx.measureText('_').width)
+				text = cropToWidth(text,invpos-10-ctx.measureText('_').width);
 			if (underscore_on) text+='_';
 			underscore_count+=1; if (underscore_count>=20) {underscore_on=!underscore_on; underscore_count=0;} //20*30 ~600ms
 
@@ -712,16 +717,16 @@
 		if(status_message){
 			ctx.textAlign = "center";     
 			ctx.lineWidth = 2;
-			ctx.strokeText(status_message,304,608);
+			ctx.strokeText(status_message,304,invpos);
 			ctx.lineWidth = 1;
-			ctx.fillText(status_message,304,608);
+			ctx.fillText(status_message,304,invpos);
 			ctx.textAlign = "start";     
 		}
 		
 		if (countdown){
 			ctx.font = "100px Tahoma";
 			var size = ctx.measureText(countdown).width;
-			var desiredsize = 608;
+			var desiredsize = invpos;
 			if (size > desiredsize){
 				//font was 100px
 				var fontsize = Math.floor(100*desiredsize/size);
@@ -729,15 +734,15 @@
 			}
 			ctx.fillStyle = countdown_color;
 			ctx.textAlign = "center";
-			ctx.lineWidth = 2; ctx.strokeText(countdown, 304, 304+50);
-			ctx.lineWidth = 1; ctx.fillText(countdown, 304, 304+50);
+			ctx.lineWidth = 2; ctx.strokeText(countdown, invpos/2, invpos/2+50);
+			ctx.lineWidth = 1; ctx.fillText(countdown, invpos/2, invpos/2+50);
 			ctx.textAlign = "start";
 		}
 
 		FREE_FOR_ALL = 2;
 		if (score && room_game_options.mode_selected != FREE_FOR_ALL){		//ugly. modes[mode_selected].show_score ? .. ideally a flag sent by the host
 			ctx.font = "20px Times New Roman";
-			var right = 608-6;
+			var right = invpos-6;
 			var bottom = 20;
 			ctx.textAlign = "end";
 			ctx.fillStyle = "#0000FF";
@@ -755,7 +760,7 @@
 		}
 		if (timer && false){	//timers are bugged, do not show
 			ctx.font = "20px Times New Roman";
-			var right = 608-6;
+			var right = invpos-6;
 			var bottom = (room_game_options.mode_selected != FREE_FOR_ALL) ? 40 : 20;
 			ctx.textAlign = "end";
 			ctx.fillStyle = "#FFFFFF";
@@ -821,11 +826,15 @@
 	// Util for drawing
 	
 	function worldtoscreen(pos){
-		return {x:pos.x-playerpos.x+9,y:pos.y-playerpos.y+9};
+		var size = 13;
+		var h=(size-1)/2;
+		return {x:pos.x-playerpos.x+h,y:pos.y-playerpos.y+h};
 	}
 	
 	function screentoworld(x,y){
-			return {x:playerpos.x+Math.floor(x/32)-9, y:playerpos.y+Math.floor(y/32)-9};
+		var size = 13;
+		var h=(size-1)/2;
+		return {x:playerpos.x+Math.floor(x/32)-h, y:playerpos.y+Math.floor(y/32)-h};
 	}
 	
 	
@@ -1173,11 +1182,11 @@
 	itemtypes =		[	{id:0,blocking:false,movable:false,stackable:false,imgid:0},						//grass
 						{id:1,blocking:true,movable:false,stackable:false,imgid:1,creature:true},			//creature
 						{id:2,blocking:true,movable:false,stackable:false,imgid:2,pathblocking:true},		//tree
-						{id:3,blocking:false,movable:true,stackable:false,imgid:3,slot:[LEFT,RIGHT],range:2},//sword
-						{id:4,blocking:false,movable:true,stackable:false,imgid:4,slot:[LEFT,RIGHT],range:9},//bow
+						{id:3,blocking:false,movable:true,stackable:false,imgid:3,slot:[LEFT,RIGHT],range:2},  //sword
+						{id:4,blocking:false,movable:true,stackable:false,imgid:4,slot:[LEFT,RIGHT],range:9},  //bow
 						{id:5,blocking:false,movable:true,stackable:true,imgid:5,slot:[AMMO]},				//arrow
-						{id:6,blocking:false,movable:true,stackable:true,imgid:6,slot:[LEFT,RIGHT],range:7},//fireball rune
-						{id:7,blocking:false,movable:true,stackable:true,imgid:7,slot:[LEFT,RIGHT],range:7},//magic wall rune
+						{id:6,blocking:false,movable:true,stackable:true,imgid:6,slot:[LEFT,RIGHT],range:7},  //fireball rune
+						{id:7,blocking:false,movable:true,stackable:true,imgid:7,slot:[LEFT,RIGHT],range:7},  //magic wall rune
 						{id:8,blocking:true,movable:false,stackable:false,imgid:8,pathblocking:true,animationdelay:500},		//magic wall
 						{id:9,blocking:false,movable:true,stackable:true,imgid:9},							//life potion
 						{id:10,blocking:false,movable:true,stackable:true,imgid:10},						//invisibility potion
@@ -1468,36 +1477,38 @@
 			followthemouse = tempfollow;
 	}
 
-	movebuttontable = {[1]:NORTH,[3]:WEST,[5]:EAST,[7]:SOUTH};
+	movebuttontable = {[1]:NORTH,[3]:WEST,[5]:EAST,[4]:SOUTH};
 	
 	function getDragXY(x,y){
 		var drag,dragx,dragy;
-		if (x>=0 && x<608 && y>=0 && y<608){	//to do: consider the offset
+		var invpos=13*32;
+		var h =(13-1)/2;
+		if (x>=0 && x<invpos && y>=0 && y<invpos){	//to do: consider the offset
 			//ctx.fillRect((x+9)*32-OFFSET.x,(y+9)*32-OFFSET.y,32,32);
 			drag="map";
-			dragx=playerpos.x+Math.floor((x+OFFSET.x)/32)-9;
-			dragy=playerpos.y+Math.floor((y+OFFSET.y)/32)-9;
-		} else if (x>=608 && y >=224 && y < 320){	
+			dragx=playerpos.x+Math.floor((x+OFFSET.x)/32)-h;
+			dragy=playerpos.y+Math.floor((y+OFFSET.y)/32)-h;
+		} else if (x>=invpos && y >=224 && y < 320){	
 			drag="inv";		//you won't send this
-			dragx=Math.floor((x-608)/32);
+			dragx=Math.floor((x-invpos)/32);
 			dragy=Math.floor((y-224)/32);
-		} else if (x>=608 && x<608+96 && y>=64 && y<192){
+		} else if (x>=608 && x<invpos+96 && y>=64 && y<192){
 			drag="eq";
-			var x=Math.floor((x-608)/32);
+			var x=Math.floor((x-invpos)/32);
 			var y=Math.floor((y-64)/32);
 			dragx=equiptable[x][y];
 			if(!dragx && dragx!=HEAD){
 				drag=false;
 			}
-		} else if (x>=608+96 && y < 64) {	//hotkey, 0 to 9
+		} else if (x>=invpos+96 && y < 64) {	//hotkey, 0 to 9
 			drag="hotkey";
-			dragx = Math.floor((x-(608+96))/32)+1;
+			dragx = Math.floor((x-(invpos+96))/32)+1;
 			dragy = Math.floor(y/32);
 			if (dragy==1) { dragx+=5; }
 			if (dragx==10) { dragx=0; }
-		} else if (x>=33+608 && x<=128+608 && y>=356 && y<=451) {
+		} else if (x>=33+invpos && x<=128+invpos && y>=356 && y<=451) {
 			drag="movebuttons";
-			var x = Math.floor((x-(33+608))/32);
+			var x = Math.floor((x-(33+invpos))/32);
 			var y = Math.floor((y-356)/32);
 			dragx = movebuttontable[y*3+x];
 			if (!dragx && dragx != NORTH){
@@ -1864,12 +1875,14 @@
 	// window.onresize
 
 	window.onresize = function () {
-		if (window.innerHeight < window.innerWidth){
+		/*if (window.innerHeight < window.innerWidth){
 			canvas.style.height = window.innerHeight;
 			//canvas.style.width = 800/
 		} else {
 			canvas.style.width = window.innerWidth;
-		}
+		}*/
+		//canvas.style.width = window.innerWidth;
+		//canvas.style.height = window.innerHeight;
 
 		canvasposition = canvas.getBoundingClientRect();
 	}
