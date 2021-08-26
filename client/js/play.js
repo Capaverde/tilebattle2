@@ -1864,6 +1864,13 @@
 	// window.onresize
 
 	window.onresize = function () {
+		if (window.innerHeight < window.innerWidth){
+			canvas.style.height = window.innerHeight;
+			//canvas.style.width = 800/
+		} else {
+			canvas.style.width = window.innerWidth;
+		}
+
 		canvasposition = canvas.getBoundingClientRect();
 	}
 
