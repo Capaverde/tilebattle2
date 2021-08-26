@@ -1463,7 +1463,7 @@
 		}
 		if (!drawingGame) return;
 		mouseposx = ev.clientX-canvasposition.left;
-		mouseposy = ev.clientY-canvasposition.top;
+		mouseposy = ev.clientY-	canvasposition.top;
 		if (tempfollow && mouseDown)
 			followthemouse = tempfollow;
 	}
@@ -1861,6 +1861,12 @@
 		}
 	};
 	
+	// window.onresize
+
+	window.onresize = function () {
+		canvasposition = canvas.getBoundingClientRect();
+	}
+
 	// window.onload
 	
 	window.onload = function () {

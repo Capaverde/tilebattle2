@@ -38,11 +38,16 @@
 <div id="holder-div"> 	 	
 </div>		 			 	
 <script src="./js/loadimgs.js"></script> 	
-<div class="middleDiv"> 
+<!--div class="middleDiv"-->
+<center> 
 <!--style="width:864px;height:608px;margin:0px auto;padding-top:0px"--> 		
-<canvas id="MyCanvas" style="width:100%; height:100%;" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
-</div> 	 	 	
+<canvas id="MyCanvas" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
+</center>
+<!--/div--> 	 	 	
 <script> 	
+
+
+
 function setupAlert(){	//call it in $(document).ready 		
 var isActive = true; 		
 var Title = document.title; 		
