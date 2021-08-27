@@ -104,6 +104,10 @@
 	talking = false;
 	status_message = "";
 	  
+
+	MAP_SIZE = 19;
+	MAP_HALF = (MAP_SIZE-1)/2;
+	INV_LEFT = MAP_SIZE*32;
 	  
 	// Cookies
 	
@@ -348,8 +352,8 @@
 	function drawWorld(){
 		if (!world || !gamestarted) return;
 		var me;
-		var size=13; //sizexsize tiles
-		var h=(size-1)/2;
+		//var size=MAP_SIZE; //sizexsize tiles
+		var h=MAP_HALF;   //(size-1)/2;
 		if (inworld(playerpos))
 			me = topItem(world[playerpos.x][playerpos.y]);
 		var creatures = [];
@@ -412,7 +416,7 @@
 	}
 	  
 	function drawHP(){
-		var invpos=13*32;
+		var invpos=INV_LEFT;
 		ctx.fillStyle="#640000";
 		ctx.fillRect(invpos+128,32*3-16+8,96,8);
 		ctx.fillStyle="#FF0000";
@@ -420,7 +424,7 @@
 	}
 	  
 	function drawInventory(){
-		var pos=13*32;
+		var pos=INV_LEFT;
 		drawImage(invimg,pos,0);
 		ctx.fillStyle = "#000000"; ctx.font = "bold 12px Tahoma";
 		
@@ -493,7 +497,7 @@
 				}
 				var frompos=worldtoscreen(eff.frompos);
 				var drawpos = {x:(frompos.x+eff.vec.x*t)*32,y:(frompos.y+eff.vec.y*t)*32}
-				if (Math.abs(drawpos.x)<13*32 && Math.abs(drawpos.y)<13*32){
+				if (Math.abs(drawpos.x)<INV_LEFT && Math.abs(drawpos.y)<INV_LEFT){
 					if (distanimationlist[eff.id].length){ //it is an array
 						var dir = dirBetween(eff.frompos, eff.topos, distanimationlist[eff.id].length>4);
 						drawImage(distanimationlist[eff.id][dir],drawpos.x-OFFSET.x,drawpos.y-OFFSET.y);
@@ -590,7 +594,7 @@
 	var last_time = 0;
 	
 	function drawgame(){
-		var invpos = 13*32;
+		var invpos = INV_LEFT;
 		if (!world || !gamestarted) return;
 
 		if ((team == 0 || hp<=0) && positions.length>0 && positions_index>-1) {	//speccing
@@ -826,14 +830,14 @@
 	// Util for drawing
 	
 	function worldtoscreen(pos){
-		var size = 13;
-		var h=(size-1)/2;
+		//var size = 13;
+		var h=MAP_HALF; //(size-1)/2;
 		return {x:pos.x-playerpos.x+h,y:pos.y-playerpos.y+h};
 	}
 	
 	function screentoworld(x,y){
-		var size = 13;
-		var h=(size-1)/2;
+		//var size = 13;
+		var h=MAP_HALF; //(size-1)/2;
 		return {x:playerpos.x+Math.floor(x/32)-h, y:playerpos.y+Math.floor(y/32)-h};
 	}
 	
@@ -1471,18 +1475,18 @@
 			return;
 		}
 		if (!drawingGame) return;
-		mouseposx = ev.clientX-canvasposition.left;
-		mouseposy = ev.clientY-	canvasposition.top;
+		mouseposx = (ev.clientX-canvasposition.left)/SCALE;
+		mouseposy = (ev.clientY-canvasposition.top)/SCALE;
 		if (tempfollow && mouseDown)
 			followthemouse = tempfollow;
 	}
 
-	movebuttontable = {[1]:NORTH,[3]:WEST,[5]:EAST,[4]:SOUTH};
+	movebuttontable = {[1]:NORTH,[3]:WEST,[5]:EAST,[7]:SOUTH};
 	
 	function getDragXY(x,y){
 		var drag,dragx,dragy;
-		var invpos=13*32;
-		var h =(13-1)/2;
+		var invpos=INV_LEFT;
+		var h = MAP_HALF;
 		if (x>=0 && x<invpos && y>=0 && y<invpos){	//to do: consider the offset
 			//ctx.fillRect((x+9)*32-OFFSET.x,(y+9)*32-OFFSET.y,32,32);
 			drag="map";
@@ -1492,7 +1496,7 @@
 			drag="inv";		//you won't send this
 			dragx=Math.floor((x-invpos)/32);
 			dragy=Math.floor((y-224)/32);
-		} else if (x>=608 && x<invpos+96 && y>=64 && y<192){
+		} else if (x>=invpos && x<invpos+96 && y>=64 && y<192){
 			drag="eq";
 			var x=Math.floor((x-invpos)/32);
 			var y=Math.floor((y-64)/32);
@@ -1532,8 +1536,8 @@
 		if (!drawingGame) return;
 		mouseDown = true;
 		if (hp<=0 || !team) return;
-		var x = ev.clientX-canvasposition.left;
-		var y = ev.clientY-canvasposition.top;
+		var x = (ev.clientX-canvasposition.left)/SCALE;
+		var y = (ev.clientY-canvasposition.top)/SCALE;
 		dragfromcx = x; dragfromcy=y;
 		ev.preventDefault();
 		var d = getDragXY(x,y);
@@ -1549,6 +1553,11 @@
 		} else if (dragfrom == "eq"){
 			if (dragfromx || dragfromx === HEAD)
 				tempfollow = inventory.equips[dragfromx].imgid;
+		} else if (dragfrom == "movebuttons"){
+			touching=true;
+			touchingmove=true;
+                        touchfromx=dragfromx;
+			console.log("mousepressed movebuttons", touching, touchingmove, touchfromx);
 		}
 	}
 	
@@ -1566,8 +1575,8 @@
 		followthemouse = 0;
 		tempfollow = 0;
 		if (hp<=0 || !team) return;
-		var x = ev.clientX-canvasposition.left;
-		var y = ev.clientY-canvasposition.top;
+		var x = (ev.clientX-canvasposition.left)/SCALE;
+		var y = (ev.clientY-canvasposition.top)/SCALE;
 		var d = getDragXY(x,y);
 		dragto = d.drag; dragtox=d.dragx; dragtoy=d.dragy; dragto_origx=d.origx; dragto_origy=d.origy;
 		if (dragfrom && dragto){
@@ -1582,6 +1591,8 @@
 				processDrag();
 			}
 		}
+//		touching=false;
+		touchingmove=false;
 	}
 	
 	window.mouseOut = function (ev) {
@@ -1716,7 +1727,9 @@
 			}
 		} else if (dragto == "hotkey"){	//same effect as doHotkey()
 			doHotkey(hotkeys[dragtox]);
-		}
+		} /*else if (dragfrom == "movebuttons"){
+
+		}*/
 	}
 	
 	function onshiftclick(ev){	//shift+click on the canvas
@@ -1756,8 +1769,8 @@
         window.mytouchstart = function(ev){
                console.log("touchstart");
 		touching = true;
-		var x = ev.changedTouches[0].clientX-canvasposition.left;
-                var y = ev.changedTouches[0].clientY-canvasposition.top;
+		var x = (ev.changedTouches[0].clientX-canvasposition.left)/SCALE;
+                var y = (ev.changedTouches[0].clientY-canvasposition.top)/SCALE;
                 //dragfromcx = x; dragfromcy=y;
                 ev.preventDefault();
                 var d = getDragXY(x,y);
@@ -1776,8 +1789,8 @@
         window.mytouchend = function (ev){
 		console.log("touchend");
 		if (touching && touchingmap){
-			var x = ev.changedTouches[0].clientX-canvasposition.left;
-                	var y = ev.changedTouches[0].clientY-canvasposition.top;
+			var x = (ev.changedTouches[0].clientX-canvasposition.left)/SCALE;
+                	var y = (ev.changedTouches[0].clientY-canvasposition.top)/SCALE;
                 	//dragfromcx = x; dragfromcy=y;
                 	ev.preventDefault();
                 	var d = getDragXY(x,y);
@@ -1787,8 +1800,8 @@
                 	        //touchfromx=d.dragx;
                 	        //touchfromy=d.dragy;
 				if (touchfromx != d.dragx || touchfromy != d.dragy){
-					var dir = dirBetween(newpos(touchfromx,touchfromy),newpos(d.dragx,d.dragy),true)
-					dirMove(dir);
+					//var dir = dirBetween(newpos(touchfromx,touchfromy),newpos(d.dragx,d.dragy),true)
+					//dirMove(dir);
 				} else {
 					dragfrom=dragto="map";
 					dragtox=d.dragx;
@@ -1874,6 +1887,7 @@
 	
 	// window.onresize
 
+	SCALE=1;
 	window.onresize = function () {
 		/*if (window.innerHeight < window.innerWidth){
 			canvas.style.height = window.innerHeight;
@@ -1883,16 +1897,28 @@
 		}*/
 		//canvas.style.width = window.innerWidth;
 		//canvas.style.height = window.innerHeight;
+		if (window.innerHeight < window.innerWidth)
+			SCALE = window.innerHeight/(INV_LEFT);
+		else
+			SCALE = window.innerWidth/(INV_LEFT+256);
+		canvas.style.height = ((INV_LEFT)*SCALE)+"px";
+		canvas.style.width = ((INV_LEFT+256)*SCALE)+"px";
+		
 
 		canvasposition = canvas.getBoundingClientRect();
 	}
 
 	// window.onload
-	
 	window.onload = function () {
 		var alerter;	//= setupAlert()
 		canvas = document.getElementById("MyCanvas");
 		ctx = canvas.getContext("2d");
+		if (window.innerHeight < window.innerWidth)
+                        SCALE = window.innerHeight/(INV_LEFT);
+                else
+                        SCALE = window.innerWidth/(INV_LEFT+256);
+                canvas.style.height = ((INV_LEFT)*SCALE)+"px";
+                canvas.style.width = ((INV_LEFT+256)*SCALE)+"px";
 		canvasposition = canvas.getBoundingClientRect();
 		var getElem_ = document.getElementById.bind(document);
 		getElem = function (id){

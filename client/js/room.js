@@ -1581,7 +1581,7 @@ function roomMousePressed(ev,objects_){
 }
 
 function roomMouseReleased(ev){
-	var x = ev.clientX-canvasposition.left; var y = ev.clientY-canvasposition.top;
+	var x = (ev.clientX-canvasposition.left)/SCALE; var y = (ev.clientY-canvasposition.top)/SCALE;
 	if (draggingthisobj.ondragend)
 		draggingthisobj.ondragend(draggingthisobj);
 	draggingthisobj.dragging = false;
@@ -1600,7 +1600,7 @@ function roomMouseOut(ev){
 }
 
 function roomMouseMoved(ev,objects_){
-	var x = ev.clientX-canvasposition.left; var y = ev.clientY-canvasposition.top;
+	var x = (ev.clientX-canvasposition.left)/SCALE; var y = (ev.clientY-canvasposition.top)/SCALE;
 	var objects = objects_ || roomObjects;
 	for(var o in objects){
 		var obj = objects[o];
