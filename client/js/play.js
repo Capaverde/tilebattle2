@@ -1338,14 +1338,22 @@
 				chatfocus = mychat;
 			} if (chatfocus){
 				if (arrows == 8){	//backspace
-					chatfocus.msg = chatfocus.msg.substring(0,chatfocus.msg.length-1);
-					ev.preventDefault();	//won't write '\backspace'
+					//chatfocus.msg = chatfocus.msg.substring(0,chatfocus.msg.length-1);
+					//ev.preventDefault();	//won't write '\backspace'
 				} else if (arrows == 13){	//enter
 					ev.preventDefault();
 					if(chatfocus.msg.length==0){ return;}
 					if (chatfocus.onsubmit)
 						chatfocus.onsubmit(chatfocus);
-				}
+				} else if (!drawingGame && chatfocus){
+                 		       var charCode = arrows;
+                        		var charStr = String.fromCharCode(charCode);
+                        		if (charCode) {
+                        		        if (chatfocus.msg.length < MSGLENLIMIT)
+                                        		chatfocus.msg += charStr;
+                        		}
+                        		ev.preventDefault();
+                		}
 				return;
 			}
 			return; //all below are game functions
@@ -1375,7 +1383,15 @@
 				}
 				talking_string = "";
 				talking=false;
-			}
+			} else {
+                        	var charCode = arrows;
+                        	var charStr = String.fromCharCode(charCode);
+                        	if (charCode) {
+                                	if (talking_string.length < MSGLENLIMIT)
+                                        	talking_string += charStr;
+                   		}
+                        	ev.preventDefault();
+                	}
 			return;
 		}
 		if (arrows == 66 && gamestarted){	//B //screenshot //debug
@@ -1440,7 +1456,7 @@
 		}
 	}
 	
-	document.addEventListener('keypress', keyPressed2);
+	//document.addEventListener('keypress', keyPressed2); //deprecated and doesn't work on mobile!
 	document.body.addEventListener('keydown', keyPressed);
 	document.body.addEventListener('keyup', keyUnpressed);
 	  
@@ -1767,6 +1783,20 @@
 
 
         window.mytouchstart = function(ev){
+	//	if (drawingNicknamePrompt || drawingRoom){
+		//	return; //does not prevent default
+		//}
+		if (drawingNicknamePrompt){
+			ev.clientX = ev.changedTouches[0].clientX;
+			ev.clientY = ev.changedTouches[0].clientY;
+                        nnMousePressed(ev);
+                        return;
+                } else if (drawingRoom){
+			ev.clientX = ev.changedTouches[0].clientX;
+			ev.clientY = ev.changedTouches[0].clientY;
+                        roomMousePressed(ev);
+                        return;
+                }
                console.log("touchstart");
 		touching = true;
 		var x = (ev.changedTouches[0].clientX-canvasposition.left)/SCALE;
@@ -1787,6 +1817,17 @@
 		}
         };
         window.mytouchend = function (ev){
+		if (drawingNicknamePrompt){
+			ev.clientX = ev.changedTouches[0].clientX;
+			ev.clientY = ev.changedTouches[0].clientY;
+			nnMouseReleased(ev);
+			return;
+		} else if (drawingRoom){
+			ev.clientX = ev.changedTouches[0].clientX;
+			ev.clientY = ev.changedTouches[0].clientY;
+			roomMouseReleased(ev);
+			return;
+		}
 		console.log("touchend");
 		if (touching && touchingmap){
 			var x = (ev.changedTouches[0].clientX-canvasposition.left)/SCALE;

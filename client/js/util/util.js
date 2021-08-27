@@ -67,6 +67,8 @@ var isGamejolt = !isNode && window.location.hostname.indexOf("gamejolt") > -1;
 
 var isOffline = false;	//testing offline, no broker, connecting to localhost/deathmatchstatic
 
+//var isMobile = ...
+
 // Cookies
 
 var useStorage;

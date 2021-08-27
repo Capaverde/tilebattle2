@@ -486,6 +486,7 @@ nnObjects.push({x:300-16+15+80,y:200+24+15+24*2+2,width:300-30-80-2,height:22,
 				},
 				onclick: function (self){
 					chatfocus = self;
+					openKeyBoard();
 					self.msg = self.msg || "";
 				},
 				onsubmit: function (self){
@@ -1559,7 +1560,7 @@ var draggingthisobj = false;
 var holdingthisobj = false;
 var dragstart = false;
 function roomMousePressed(ev,objects_){
-	var x = ev.clientX-canvasposition.left; var y = ev.clientY-canvasposition.top;
+	var x = (ev.clientX-canvasposition.left)/SCALE; var y = (ev.clientY-canvasposition.top)/SCALE;
 	var objects = objects_ || roomObjects;
 	for(var o in objects){
 		var obj = objects[o];

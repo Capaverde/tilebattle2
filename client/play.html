@@ -54,8 +54,26 @@ html, body {
 <canvas id="MyCanvas" style="" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
 </center>
 <!--/div--> 	 	 	
+<input id="dummyInput" type="text" style="position:fixed;left:-2000px;" />
 <script> 	
+function openKeyBoard(){
+    document.getElementById("dummyInput").click();
+    setTimeout(function(){
+        document.getElementById("dummyInput").focus()},1)
+    return "keyboard open";
 
+}
+var mydummy = document.getElementById("dummyInput");
+mydummy.oninput = function (ev) {
+    if (chatfocus){
+        chatfocus.msg = mydummy.value;
+    }
+}
+mydummy.onfocus = function(ev) {
+    if (chatfocus){
+        mydummy.value = chatfocus.msg;
+    }
+}
 
 
 function setupAlert(){	//call it in $(document).ready 		
