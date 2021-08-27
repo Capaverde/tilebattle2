@@ -1364,8 +1364,8 @@
 			return;
 		} else if (talking && gamestarted){
 			if (arrows == 8){	//backspace
-				talking_string = talking_string.substring(0,talking_string.length-1);
-				ev.preventDefault();	//won't write '\backspace'
+				//talking_string = talking_string.substring(0,talking_string.length-1);
+				//ev.preventDefault();	//won't write '\backspace'
 			} else if (arrows == 13){	//enter
 				if(talking_string.length==0){talking=false; return;}
 				if (!(talking_string.substr(0,1)=='/')){
@@ -1383,6 +1383,7 @@
 				}
 				talking_string = "";
 				talking=false;
+				mydummy.blur();
 			} else {
                         	var charCode = arrows;
                         	var charStr = String.fromCharCode(charCode);

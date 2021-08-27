@@ -51,6 +51,8 @@ html, body {
 <!--div class="middleDiv"-->
 <center> 
 <!--style="width:864px;height:608px;margin:0px auto;padding-top:0px"--> 		
+<button id="goFS">FS</button>
+<button id="goT">T</button>
 <canvas id="MyCanvas" style="" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
 </center>
 <!--/div--> 	 	 	
@@ -59,7 +61,7 @@ html, body {
 function openKeyBoard(){
     document.getElementById("dummyInput").click();
     setTimeout(function(){
-        document.getElementById("dummyInput").focus()},1)
+        document.getElementById("dummyInput").focus()},1);
     return "keyboard open";
 
 }
@@ -68,13 +70,48 @@ mydummy.oninput = function (ev) {
     if (chatfocus){
         chatfocus.msg = mydummy.value;
     }
+    if (talking){
+        talking_string = mydummy.value;
+    }
 }
 mydummy.onfocus = function(ev) {
     if (chatfocus){
         mydummy.value = chatfocus.msg;
     }
+    if (talking){
+        mydummy.value = talking_string;
+    }
 }
 
+
+function toggleFullScreen() {
+  var doc = window.document;
+  var docEl = doc.documentElement;
+
+  var requestFullScreen = docEl.requestFullscreen || docEl.mozRequestFullScreen || docEl.webkitRequestFullScreen || docEl.msRequestFullscreen;
+  var cancelFullScreen = doc.exitFullscreen || doc.mozCancelFullScreen || doc.webkitExitFullscreen || doc.msExitFullscreen;
+
+  if(!doc.fullscreenElement && !doc.mozFullScreenElement && !doc.webkitFullscreenElement && !doc.msFullscreenElement) {
+    requestFullScreen.call(docEl);
+  }
+  else {
+    cancelFullScreen.call(doc);
+  }
+}
+
+  var goFS = document.getElementById("goFS");
+  goFS.addEventListener("click", function() {
+      toggleFullScreen();
+  }, false);
+
+  var goT = document.getElementById("goT");
+  goT.addEventListener("click", function () {
+      talking = !talking;
+      if (talking)
+          setTimeout(function(){
+              document.getElementById("dummyInput").focus()},1);
+
+  }, false);
 
 function setupAlert(){	//call it in $(document).ready 		
 var isActive = true; 		

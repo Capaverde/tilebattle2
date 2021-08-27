@@ -107,7 +107,7 @@ var skeleton_npc = function (self, creatures, interval) {
 		if (self.target){
 			//cast attacks
 			// ...
-			if (R(2) == 0){
+			if (R(2) == 0 && self.genotype.spells.length > 0){
 				var atk = self.genotype.spells[R(self.genotype.spells.length)];
 				castAtCreature(self, self.target, atk);
 				self.exhaust = self.cast_delay || self.walk_delay * 2;

@@ -2334,7 +2334,9 @@ NORTHEAST = 7;
 
 if (isnode){
 	require("./util/util.js");
+	require("./util/util_npc.js");
 	require("./content/content_modes");
+	require("./content/content_npcs");
 
 	function getTime(){
 		return new Date().getTime();
