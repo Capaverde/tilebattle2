@@ -30,7 +30,8 @@ app.get('/play.html', (req, res) => {
   res.sendFile(__dirname + '../client/play.html');
 }); */
 
-app.use(express.static('./client'));
+app.use("/", express.static('./client'));
+app.use("/mapeditor", express.static('./mapeditor'));
 
 
 
@@ -60,7 +61,7 @@ rooms.push(permaroom);
 room_passes[permaroom.name] = {name:permaroom.name, pass:false};
 realrooms[permaroom.name] = {name:permaroom.name, players:[], sockets:[], host:false, room:permaroom, server:true, serveraddress: "127.0.0.1:3000"};
 
-app_game_options = {size_selected:1};
+app_game_options = {size_selected:1,mode_selected:1, map_selected:1}; //medium, Team Deathmatch, Snow
 hostapp.startgame(app_game_options);
 
 
@@ -104,23 +105,25 @@ io.on('connection', (socket) => {
         console.log('start', data); 
         if (!realrooms[data.room] || realrooms[data.room].players.length == 0){
             if (!realrooms[data.room]) { return; }
-            //the first to login is the host, excepto quando server=true
-	    if (!realrooms[data.room].server){
-	        realrooms[data.room].host = data.id;
-	    }
+            //o primeiro a dar login é o host, excepto quando server=true
+            if (!realrooms[data.room].server){
+	              realrooms[data.room].host = data.id;
+	          }
         }
         realrooms[data.room].players.push(data.id);
         realrooms[data.room].sockets.push(socket);
         socket.room = data.room;
         socket.myid = data.id;
-	if (!realrooms[data.room].server){
-	    socket.emit('hostid', {id:realrooms[data.room].host});
-	} else {
-	    socket.emit('hostid', {id:-1, server: true, serveraddress: realrooms[data.room].serveraddress});
-	    hostapp.onconnection(socket);
-	}
-        realrooms[data.room].room.players += 1;
-      
+	      if (!realrooms[data.room].server){
+	         socket.emit('hostid', {id:realrooms[data.room].host});
+	      } else {
+	          socket.emit('hostid', {id:-1, server: true, serveraddress: realrooms[data.room].serveraddress});
+	          hostapp.onconnection(socket);
+	      }
+       realrooms[data.room].room.players += 1;
+
+       //enviar mensagens do servidor
+       socket.emit('servermessage', "* WASD to move, mouse to attack, mouse to manipulate inventory. ESC toggles room view, T enters talking mode, F toggles fullscreen.");
     });
 
     socket.on('disconnect', function () { 

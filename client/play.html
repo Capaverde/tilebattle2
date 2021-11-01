@@ -30,8 +30,8 @@ html, body {
 <script src="./js/peer.min.js"></script> 	 	
 <script src="./js/util/util.js"></script> 	
 <script src="./js/util/util_npc.js"></script> 	
-<script src="./js/content/content_modes.js"></script> 	
-<script src="./js/content/content_npcs.js"></script> 
+<script src="./js/content/modes.js"></script> 	
+<script src="./js/content/npcs.js"></script> 
 <script src="./js/hostapp.js"></script> 
 <script src="./js/peerapp.js"></script> 
 </head> 
@@ -51,8 +51,8 @@ html, body {
 <!--div class="middleDiv"-->
 <center> 
 <!--style="width:864px;height:608px;margin:0px auto;padding-top:0px"--> 		
-<button id="goFS">FS</button>
-<button id="goT">T</button>
+<!--button id="goFS">FS</button-->
+<!--button id="goT">T</button-->
 <canvas id="MyCanvas" style="" width="864" height="608" onmousedown="mousePressed(event)" onmouseup="mouseReleased(event)" onmousemove="mouseMoved(event)" onmouseout="mouseOut(event)" oncontextmenu="return false;" > <!--style="cursor:url(/sprites/crosshair-best.png) 9 9, auto;"--> 			This browser or document mode doesn't support canvas</canvas> 	
 </center>
 <!--/div--> 	 	 	
@@ -99,19 +99,18 @@ function toggleFullScreen() {
   }
 }
 
-  var goFS = document.getElementById("goFS");
+  /*var goFS = document.getElementById("goFS");
   goFS.addEventListener("click", function() {
       toggleFullScreen();
-  }, false);
+  }, false);*/
 
-  var goT = document.getElementById("goT");
+  /*var goT = document.getElementById("goT");
   goT.addEventListener("click", function () {
       talking = !talking;
       if (talking)
           setTimeout(function(){
               document.getElementById("dummyInput").focus()},1);
-
-  }, false);
+  }, false);*/
 
 function setupAlert(){	//call it in $(document).ready 		
 var isActive = true; 		

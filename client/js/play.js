@@ -1229,7 +1229,7 @@
 						{id:43,blocking:false,movable:true,stackable:false,imgid:43,armor:1,slot:[HEAD]},	//leather helmet
 						{id:44,blocking:false,movable:true,stackable:false,imgid:44,armor:1,slot:[BOOTS]},	//leather boots
 						{id:45,blocking:true,movable:false,stackable:false,imgid:45,creature:true,animationdelay:500},		//magic dust creature
-						{id:46,blocking:false,movable:true,stackable:true,imgid:46,slot:[LEFT,RIGHT],range:7},//poison field rune
+						{id:46,blocking:false,movable:true,stackable:true,imgid:46,slot:[LEFT,RIGHT],range:7},  //poison field rune
 						{id:47,blocking:false,movable:false,stackable:false,imgid:47,animationdelay:250},	//poison gas
 						{id:48,blocking:true,movable:false,stackable:false,imgid:48,x_repeat:4,y_repeat:4},	//void tile
 						{id:49,blocking:true,movable:false,stackable:false,imgid:49,usable:true},	//lever
@@ -1328,6 +1328,7 @@
 				else
 					showCanvas();
 			}
+   ev.preventDefault();
 			return;
 		}
 		if (hostleft) 
@@ -1336,32 +1337,34 @@
 			if (drawingRoom && arrows == 9){	//tab
 				ev.preventDefault(); 
 				chatfocus = mychat;
+   openKeyBoard();
 			} if (chatfocus){
 				if (arrows == 8){	//backspace
-					//chatfocus.msg = chatfocus.msg.substring(0,chatfocus.msg.length-1);
-					//ev.preventDefault();	//won't write '\backspace'
+					   //chatfocus.msg = chatfocus.msg.substring(0,chatfocus.msg.length-1);
+					   //ev.preventDefault();	//won't write '\backspace'
 				} else if (arrows == 13){	//enter
-					ev.preventDefault();
-					if(chatfocus.msg.length==0){ return;}
-					if (chatfocus.onsubmit)
-						chatfocus.onsubmit(chatfocus);
+					   ev.preventDefault();
+					   if(chatfocus.msg.length==0){ chatfocus=false; return;}
+					   if (chatfocus.onsubmit)
+						      chatfocus.onsubmit(chatfocus); //in room.js?
 				} else if (!drawingGame && chatfocus){
-                 		       var charCode = arrows;
+                 		       /*var charCode = arrows;
                         		var charStr = String.fromCharCode(charCode);
                         		if (charCode) {
                         		        if (chatfocus.msg.length < MSGLENLIMIT)
                                         		chatfocus.msg += charStr;
                         		}
-                        		ev.preventDefault();
-                		}
-				return;
-			}
-			return; //all below are game functions
+                        		ev.preventDefault();*/
+      }
+				   return;
+			 }
+			 return; //all below are game functions
 		}
 		if (arrows==84 && gamestarted && !talking){	//T
-			talking=true;
-			ev.preventDefault();	//won't write 't'
-			return;
+			   talking=true;
+      openKeyBoard();
+			   ev.preventDefault();	//won't write 't'
+			   return;
 		} else if (talking && gamestarted){
 			if (arrows == 8){	//backspace
 				//talking_string = talking_string.substring(0,talking_string.length-1);
@@ -1382,21 +1385,27 @@
 					socketemit("command", {com:com,param:param});
 				}
 				talking_string = "";
+   mychat.msg="";  //in room.js, needed for synchronization
 				talking=false;
 				mydummy.blur();
 			} else {
-                        	var charCode = arrows;
+                  /*      	var charCode = arrows;
                         	var charStr = String.fromCharCode(charCode);
                         	if (charCode) {
                                 	if (talking_string.length < MSGLENLIMIT)
                                         	talking_string += charStr;
                    		}
-                        	ev.preventDefault();
-                	}
+                        	ev.preventDefault();*/
+          }
 			return;
 		}
+  if (arrows == 70){  //F //fullscreen
+    toggleFullScreen();   //this function is defined in play.html
+  }
 		if (arrows == 66 && gamestarted){	//B //screenshot //debug
-			window.open(canvas.toDataURL(),'_blank');
+			//window.open(canvas.toDataURL("image/png"));
+   var win=window.open(); 
+   win.document.write("<img src='"+canvas.toDataURL()+"'/>");
 		}
 		if (!locked && !usingkeyboard){
 			if (arrows==39 || (!talking && arrows==68)){	//right	//d
@@ -2087,11 +2096,11 @@
 
 		
 		drawingLoading = false;		//end Loading, start Connecting
-		if (url(document.referrer)!=window.location.host)	//change this; js var keeping track??
+		//if (url(document.referrer)!=window.location.host)	//change this; js var keeping track??
 			drawingNicknamePrompt = true;
-		else {
-			setTimeout(function () { onNick(getCookie("name")); }, 0);
-		}
+		//else {
+			//setTimeout(function () { onNick(getCookie("name")); }, 0);
+		//}
 
 	};	
 	
@@ -2144,7 +2153,7 @@
 										}
 									}
 								});
-								//conn.on('close', function () {alert("Disconnected");});
+								conn.on('close', function () {appendText("Disconnected from host");});
 								//setuppeer();	//now the host also predicts movement! world != imagegrid from now on
 							} else {
 								imhost = true;
@@ -2177,6 +2186,9 @@
 		alert("The room is full.");
 	});
 	
+ socket.on('disconnect', function () {
+  appendText("DISCONNECTED");
+ });
 	
 	// Peer
 	
@@ -2321,7 +2333,7 @@
 			//Current Fix:
 			peer.id = last_id;
 			peer._lastServerId = last_id;
-			appendText("* Disconnected");
+			appendText("* Disconnected from the signalling server");
 			console.log("reconnecting:",peer.id, peer._lastServerId);
 			peer.reconnect();
 			reconnected = true;

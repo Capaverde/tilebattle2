@@ -89,6 +89,7 @@ if (!isnode){
 	function sendallinputs(conn){
 			//send configs
 			conn.send({type: 'mytimelimit', value: room_game_options.timelimit});
+	  conn.send({type: 'myscorelimit', value: room_game_options.scorelimit});
 			conn.send({type: 'size_selected', value: room_game_options.size_selected});
 			conn.send({type: 'terrain_selected', value: room_game_options.map_selected});
 			conn.send({type: 'gamemode_selected', value: room_game_options.mode_selected});
@@ -112,7 +113,7 @@ function broadcast(name,data,conn){	//host
 	var grid = false;
 	var changes = [];
 	var interval_send = false;
-	var magiceffectsH=[];	
+	 magiceffectsH=[];	
 	var distanceeffectsH=[];
 	var damageeffectsH=[];
 	var interval_count = false;
@@ -941,62 +942,62 @@ function broadcast(name,data,conn){	//host
 						
 						
 	
-	//good names to have around
-	var grass = 0;
-	//var tree = 2;
-	var sword = 3;
-	var bow = 4;
-	var magicwall = 8;
+	//good names to have around //not var because global
+	 grass = 0;
+	// tree = 2;
+	 sword = 3;
+	 bow = 4;
+	 magicwall = 8;
 
-	var fruitytree = 12;
-	var stonewall = 14;
-	var door = 15;
-	var opendoor = 16;
-	var water = 17;
+	 fruitytree = 12;
+	 stonewall = 14;
+	 door = 15;
+	 opendoor = 16;
+	 water = 17;
 	
-	var bush = 20;
-	var poisongas = 47;
+	 bush = 20;
+	 poisongas = 47;
 	
 	//map grass
-	var grass2 = 21;
-	var firtree = 22;
-	var branch = 23;
-	var tree = 35;
+	 grass2 = 21;
+	 firtree = 22;
+	 branch = 23;
+	 tree = 35;
 	
 	//map snow
-	var snow = 24;
-	var snowy_fir_tree = 25;
-	var snowy_dead_tree_twisted = 26;
-	var snowy_dead_tree_halfalive = 27;
-	var ice = 39;
+	 snow = 24;
+	 snowy_fir_tree = 25;
+	 snowy_dead_tree_twisted = 26;
+	 snowy_dead_tree_halfalive = 27;
+	 ice = 39;
 	
 	//map desert
-	var sand = 28;
-	var palm_tree = 29;
-	var cactus_thick = 30;
-	var cactus_sharp = 31;
+	 sand = 28;
+	 palm_tree = 29;
+	 cactus_thick = 30;
+	 cactus_sharp = 31;
 	
-	var redplayer = 18;
-	var blueplayer = 19;
-	var greenplayer = 32;
-	var dragon = 33;
-	var dummy = 34;
-	var redplayer_aura = 36;
-	var blueplayer_aura = 37;
-	var greenplayer_aura = 38;
+	 redplayer = 18;
+	 blueplayer = 19;
+	 greenplayer = 32;
+	 dragon = 33;
+	 dummy = 34;
+	 redplayer_aura = 36;
+	 blueplayer_aura = 37;
+	 greenplayer_aura = 38;
 
-	var criticalhit = 0;
-	var firehit = 1;
-	var drawblood = 2;
-	var poff = 3;
-	var magicdust = 4;
-	var splash = 5;
-	var block = 6;
-	var energy = 7;
-	var poisonhit = 8;
+	 criticalhit = 0;
+	 firehit = 1;
+	 drawblood = 2;
+	 poff = 3;
+	 magicdust = 4;
+	 splash = 5;
+	 block = 6;
+	 energy = 7;
+	 poisonhit = 8;
 	
-	var frozenstar = 2;
-	var poisonspit = 4;
+	 frozenstar = 2;
+	 poisonspit = 4;
 	//
 
 
@@ -2241,6 +2242,7 @@ NORTHEAST = 7;
 	TEAM_VERSUS = 0;
 	TEAM_DEATHMATCH = 1;
 	FREE_FOR_ALL = 2;
+ PVE_DEMO = 3;
 
 	var mode_selected;
 	var size_selected;
@@ -2335,8 +2337,10 @@ NORTHEAST = 7;
 if (isnode){
 	require("./util/util.js");
 	require("./util/util_npc.js");
-	require("./content/content_modes");
-	require("./content/content_npcs");
+	require("./content/modes.js");
+	require("./content/npcs.js");
+ //require("./content/items.js"); //still not needed
+ //require("./content/spells.js");
 
 	function getTime(){
 		return new Date().getTime();
@@ -2359,7 +2363,7 @@ if (isnode){
 		if (!i)	{	console.log("Deslogou antes de criar"); return; }
 		var lastteam = i.team;
 		i.team=team;
-		conns.forEach(function(conn2){conn2.send({type:'team',id:i.id,team:i.team,ffa:true})});
+		conns.forEach(function(conn2){conn2.send({type:'team',id:i.id,team:i.team,ffa:(room_game_options.mode_selected==FREE_FOR_ALL)})});
 		updateNames();
 		if (gamestarted){
 			//appendText("* "+i.name+" was moved to Red");
@@ -2462,7 +2466,7 @@ if (isnode){
 							}
 					    });
 						conn.on('disconnect', function (reason) {	//only for sockets
-							console.log('conn hostapp disconnect');
+							console.log('conn hostapp disconnect',reason);
 							data = {id:conn.peer};
 							if (id_names[data.id]){
 								appendText("* "+id_names[data.id].name+" has left the room");
@@ -2473,7 +2477,7 @@ if (isnode){
 									totalRemove(i.id,i.team);
 								}
 								delete clients[data.id];
-								//conn.close();
+								conn.close();
 								updateNames();
 								broadcast("leave", data);
 							}

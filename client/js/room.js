@@ -1010,7 +1010,7 @@ createObject(575 - 16, 356 - 15, 21, 21,
 		}, true);
 
 		
-var terrains = ["Forest"]	//, "Snow", "Desert"];
+var terrains = ["Forest", "Snow", "Desert"];
 		
 createTextObject(314 - 16, 380, "Terrain:");
 createObject(314 - 16, 380, 0, 0,
@@ -1142,7 +1142,9 @@ mychat.onsubmit = function (self) {
 				appendText(self.msg, name_, false, team);
 			}
 			self.msg = "";
+  talking_string = ""; //defined in play.js, this is necessary for their synchronization
 			chatfocus = false;
+   mydummy.blur();  //defined in play.html
 		};
 mychat.msg = "";
 //mychat.maxlen = 125;
