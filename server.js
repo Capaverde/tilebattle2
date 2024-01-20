@@ -61,7 +61,7 @@ rooms.push(permaroom);
 room_passes[permaroom.name] = {name:permaroom.name, pass:false};
 realrooms[permaroom.name] = {name:permaroom.name, players:[], sockets:[], host:false, room:permaroom, server:true, serveraddress: "127.0.0.1:3000"};
 
-app_game_options = {size_selected:1,mode_selected:1, map_selected:1}; //medium, Team Deathmatch, Snow
+app_game_options = {size_selected:1,mode_selected:1, map_selected:0}; //medium, Team Versus, Forest
 hostapp.startgame(app_game_options);
 
 
@@ -123,7 +123,8 @@ io.on('connection', (socket) => {
        realrooms[data.room].room.players += 1;
 
        //enviar mensagens do servidor
-       socket.emit('servermessage', "* WASD to move, mouse to attack, mouse to manipulate inventory. ESC toggles room view, T enters talking mode, F toggles fullscreen.");
+       socket.emit('servermessage', "* WASD to move, mouse to attack, mouse to manipulate inventory.");
+       socket.emit('servermessage', "* ESC toggles room view, T enters talking mode, F toggles fullscreen.");
     });
 
     socket.on('disconnect', function () { 

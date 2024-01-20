@@ -129,7 +129,7 @@ function broadcast(name,data,conn){	//host
 	var shouldDetectWin = true;
 	
 	//room
-	var friendlyfire = false;
+	var friendlyfire = true;
 	var playershp = 100;
 	var redspawn = {x:9,y:25};
 	var bluespawn = {x:90,y:25};
@@ -901,8 +901,8 @@ function broadcast(name,data,conn){	//host
 						{id:12, blocking: true, movable: false, stackable: false, imgid: 12, pathblocking: true, usemap: true},	//fruity tree
 						{id:13, blocking: false, movable: true, stackable: true, imgid: 13, usewith: false, use: true},//,effect:makeEffectFeed(50),removeonuse: true},	//apple
 						{id:14, blocking: true, movable: false, stackable: false, imgid: 14, pathblocking: true},//,hp:400,drop:dropStoneWall,pillar:true},	//stone wall
-						{id:15, blocking: true, movable: false, stackable: false, imgid: 15, pathblocking: true},//, usemap:true,effect:effectOpenDoor,hp:200},	//closed door
-						{id:16, blocking: false, movable: false, stackable: false, imgid: 16},//, usemap:true,effect:effectCloseDoor},	//open door
+						{id:15, blocking: true, movable: false, stackable: false, imgid: 15, pathblocking: true, onUse:onUseIncrement }, //, usemap:true,effect:effectOpenDoor,hp:200},	//closed door
+						{id:16, blocking: false, movable: false, stackable: false, imgid: 16, onUse: onUseDecrement}, //, usemap:true,effect:effectCloseDoor},	//open door
 						{id:17, blocking: true, movable: false, stackable: false, imgid: 17, pathblocking: false},	//water
 						{id:18, blocking: true, movable: false, stackable: false, imgid: 18, creature: true},	//red player
 						{id:19, blocking: true, movable: false, stackable: false, imgid: 19, creature: true},	//blue player
@@ -1774,7 +1774,7 @@ NORTHEAST = 7;
 				var tile = getTileH(t.pos.x,t.pos.y);
 				if (!tile) return;
 				//dropItems(t,tile);	//could be moved to onPlayerDeath? // not for now
-                                dropItems2(t,tile);
+                                //dropItems2(t,tile);
 				csocketemit(t,{type:"emptyInventory"});
 				modes[room_game_options.mode_selected].onPlayerDeath(t, scoreH);
 			}
@@ -2034,20 +2034,20 @@ NORTHEAST = 7;
 
 		//move below to somewhere else
 		myAddToEq(c,3,1,LEFT);	//sword
-		myAddToEq(c,41,1,TORSO); //leather armor
+		/*myAddToEq(c,41,1,TORSO); //leather armor
 		myAddToEq(c,42,1,LEGS);	//leather legs
 		myAddToEq(c,43,1,HEAD);	//leather helmet
-		myAddToEq(c,44,1,BOOTS); //leather boots
+		myAddToEq(c,44,1,BOOTS); //leather boots*/
 		myAddToEq(c,5,10,AMMO);	//arrows
 		
 		myAddToInv(c,4);	//bow
-		myAddToInv(c,5,10);	//arrow
-		myAddToInv(c,5,10);	//arrow
+		myAddToInv(c,5,30);	//arrow
+		//myAddToInv(c,5,10);	//arrow
 		myAddToInv(c,6,10);	//fireball rune	//burst arrow
 		myAddToInv(c,7,10);	//magic wall rune
-		myAddToInv(c,7,10);	//magic wall rune
+		//myAddToInv(c,7,10);	//magic wall rune
 		myAddToInv(c,9,10);	//life potion
-		myAddToInv(c,10,4);	//invis potion
+		myAddToInv(c,10,10);	//invis potion
 		//myAddToInv(c,11,2);	//haste potion
 		//myAddToInv(c,40,5);	//healing rune
 		myAddToInv(c,46,10);	//poison field rune	//replace with poison arrow later, plus burst arrow
@@ -2242,7 +2242,7 @@ NORTHEAST = 7;
 	TEAM_VERSUS = 0;
 	TEAM_DEATHMATCH = 1;
 	FREE_FOR_ALL = 2;
- PVE_DEMO = 3;
+ 	PVE_DEMO = 3;
 
 	var mode_selected;
 	var size_selected;
@@ -2252,11 +2252,11 @@ NORTHEAST = 7;
 
 	var room_game_options;
 
-	var map_sizes = [{x:25,y:15},{x:50,y:30},{x:100,y:60}];
+	var map_sizes = [{x:25,y:25},{x:50,y:50},{x:100,y:100}];
 	
 	function find_spawn(w,h){
 		var xr,yr,xb,yb;
-		if(w>h){
+		if(w>=h){
 			xr=Math.floor(0.1*w);
 			xb=w-xr;
 			yr=Math.floor(h/2);
@@ -2289,7 +2289,7 @@ NORTHEAST = 7;
 		//room
 		WwidthH = map_sizes[options.size_selected].x;
 		WheightH = map_sizes[options.size_selected].y;
-		friendlyfire = false;	//true;
+		friendlyfire = true;
 		playershp = 40;
 		var s = find_spawn(WwidthH, WheightH);
 		redspawn = {x:s.xr, y:s.yr};
@@ -2338,9 +2338,9 @@ if (isnode){
 	require("./util/util.js");
 	require("./util/util_npc.js");
 	require("./content/modes.js");
+ 	//require("./content/spells.js");
 	require("./content/npcs.js");
  //require("./content/items.js"); //still not needed
- //require("./content/spells.js");
 
 	function getTime(){
 		return new Date().getTime();
@@ -2514,7 +2514,7 @@ if (isnode){
 	global.inworldH = inworldH;
 	global.getTileH = getTileH;
 	global.getField = getField;
-	//global.spells = spells;
+	global.spells = spells;
 
 	//shit. imagine what I'll have to do for spells ...
 

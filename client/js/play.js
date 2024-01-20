@@ -1,3 +1,4 @@
+
 	//TileBattle
 	
 	//FILEMAP
@@ -365,7 +366,7 @@
 				if(!tile) {
 					ctx.fillStyle="#000000"; 
 					ctx.fillRect((x+h)*32-OFFSET.x,(y+h)*32-OFFSET.y,32,32);
-					tile = [];//[48];	//void
+					tile = []; //[48];	//void
 				}
 				for (var k=0;k<tile.length;k+=1){
 					if (!tile[k].creature) {
@@ -1493,6 +1494,7 @@
 	dragto_origy=0;
 	
 	window.mouseMoved = function (ev) {
+		ev.preventDefault();
 		if (drawingNicknamePrompt){
 			nnMouseMoved(ev);
 			return;
@@ -1552,6 +1554,7 @@
 	}
   
 	window.mousePressed = function (ev) {
+		ev.preventDefault();
 		if (drawingNicknamePrompt){
 			nnMousePressed(ev);
 			return;
@@ -1588,6 +1591,7 @@
 	}
 	
 	window.mouseReleased = function (ev) {
+		ev.preventDefault();
 		if (drawingNicknamePrompt){
 			nnMouseReleased(ev);
 			return;
@@ -1622,6 +1626,7 @@
 	}
 	
 	window.mouseOut = function (ev) {
+		ev.preventDefault();
 		if (drawingRoom){
 			roomMouseOut(ev);
 			return;
@@ -1994,7 +1999,7 @@
 					getElem("apple"),			//13
 					getElem("stonewall"),		//14
 					getElem("door"),			//15
-					false,	//getElem("opendoor"),		//16
+					getElem("opendoor"),		//16
 					getElem("water"),			//17
 					getElem("redPlayer"),		//18
 					getElem("bluePlayer"),		//19
@@ -2029,9 +2034,9 @@
 					[getElem("magicdust2"), getElem("magicdust3"), getElem("magicdust4")],		//45
 					getElem("poisonfieldrune"),	//46
 					[getElem("poisongas0"), getElem("poisongas1"), getElem("poisongas2"), getElem("poisongas3")],		//47
-					//[getElem("void1"), getElem("void2"), getElem("void3"), getElem("void4"),getElem("void5"), getElem("void6"), getElem("void7"), getElem("void8"),
+					[getElem("void1"), getElem("void2"), getElem("void3"), getElem("void4"),getElem("void5"), getElem("void6"), getElem("void7"), getElem("void8"),
 					 		//getElem("void9"), getElem("void10"), getElem("void11"), getElem("void12"),getElem("void13"), getElem("void14"), getElem("void15"), getElem("void16")]		//48
-					false,	//48
+					//false,	//48
 					getElem("lever"),
 					getElem("lever_pulled")
 				];
@@ -2110,7 +2115,33 @@
 	//move callbacks to outside window.onload
 	
 	// Socket.io
-		
+	
+ function makeSocketHeartbeater ( sock ) {
+		var timeoutId = 0;
+		function heartbeat () {
+			timeoutId = setTimeout( heartbeat, 20000 );
+			//if ( sock._open() ) {
+				socket.emit( 'HEARTBEAT', {} );
+			//}
+		}
+		// Start 
+		heartbeat();
+		// return
+		return {
+			start : function () {
+				if ( timeoutId === 0 ) { heartbeat(); }
+			},
+			stop : function () {
+				clearTimeout( timeoutId );
+				timeoutId = 0;
+			}
+		};
+	}
+
+//setInterval(()=>{ socket.emit('user viewing', '<%= user.username %>'); },1000);
+makeSocketHeartbeater( socket );
+
+
 	socket.on('title', function (title){
 						document.title = title + ' - TileBattle';
 						roomTitle = title;

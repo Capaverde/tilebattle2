@@ -12,6 +12,7 @@
 // define 
 
 	//map grass
+ var grass = 0;
 	var grass2 = 21;
 	var firtree = 22;
 	var branch = 23;
@@ -47,7 +48,7 @@ function createGrassMap(width,height){
 }
 
 function createForestMap(width, height){
-	var grid = make2dArray(width, height, function () { return [createItem(grass2,1)]; });
+	var grid = make2dArray(width, height, function () { return [createItem(grass,1)]; });
 	//10% trees/10	//40% trees/2.5
 	for (var k=0; k < width*height/10; k+=1){
 		var pos = newpos(R(width), R(height));
@@ -151,7 +152,33 @@ var modes = [
 			this.state.options = options;
 		},
 		onStartup: function () {
-			//
+			//walls and doors around spawn
+			//spawnred = {x:9,y:25}, spawnblue={x:?,y:25}
+
+			LX=4;RX=8;LY=22;RY=26;MY=24
+
+			for (var ax=LX; ax<= RX; ax++){
+				for (var ay=LY; ay<=RY; ay++){
+					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
+						getTileH(ax, ay).push(createItem(14, 1));
+					} else if (ax==RX && ay==MY){
+						getTileH(ax, ay).push(createItem(15, 1));
+					}
+				}
+			}
+
+  LX=41;RX=45;LY=22;RY=26;MY=24
+
+			for (var ax=LX; ax<= RX; ax++){
+				for (var ay=LY; ay<=RY; ay++){
+					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==LX && ay==MY)){
+						getTileH(ax, ay).push(createItem(14, 1));
+					} else if (ax==LX && ay==MY){
+						getTileH(ax, ay).push(createItem(15, 1));
+					}
+				}
+			}
+
 		},
 		map: function () { 
 			return mapCreators[this.state.options.map_selected]; 	//the standard map
@@ -190,7 +217,33 @@ var modes = [
 			this.state.options = options;
 		}, 
 		onStartup: function () {
-			//
+			//walls and doors around spawn
+			//spawnred = {x:9,y:25}, spawnblue={x:?,y:25}
+  //Assuming 50x50 map.
+
+			LX=4;RX=8;LY=22;RY=26;MY=24
+
+			for (var ax=LX; ax<= RX; ax++){
+				for (var ay=LY; ay<=RY; ay++){
+					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
+						getTileH(ax, ay).push(createItem(14, 1));
+					} else if (ax==RX && ay==MY){
+						getTileH(ax, ay).push(createItem(15, 1));
+					}
+				}
+			}
+
+  LX=43;RX=47;LY=22;RY=26;MY=24
+
+			for (var ax=LX; ax<= RX; ax++){
+				for (var ay=LY; ay<=RY; ay++){
+					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==LX && ay==MY)){
+						getTileH(ax, ay).push(createItem(14, 1));
+					} else if (ax==LX && ay==MY){
+						getTileH(ax, ay).push(createItem(15, 1));
+					}
+				}
+			}
 		},
 		map: function () { 
 			return mapCreators[this.state.options.map_selected]; 	//the standard map
@@ -268,7 +321,26 @@ var modes = [
 			var y = Math.floor(grid[0].length/2);
 			//var dragon = createCreature(newpos(x,y), 100, monsterByName['dragon'], true);
 			//createUniqueItem -> onUse (ground use) summon random monster around pos || a lever to be pulled || regular lever onUse change itemid in itemtypesH
+
+			//walls and doors around spawn
+			//spawnred = {x:9,y:25}, spawnblue={x:?,y:25}
+
+			LX=4;RX=8;LY=12;RY=16;MY=14
+
+			for (var ax=LX; ax<= RX; ax++){
+				for (var ay=LY; ay<=RY; ay++){
+					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
+						getTileH(ax, ay).push(createItem(14, 1));
+					} else if (ax==RX && ay==MY){
+						getTileH(ax, ay).push(createItem(15, 1));
+					}
+				}
+			}
+
+
+
 			var lever = createItem(49,1);
+
 			getTileH(x,y).push(lever);	//common lever, provisory
 			lever.onUse = function (c, self, pos) { 
 				if (self[0]==49)	//only on unpulled

@@ -8,7 +8,7 @@ numbers.style.display = "none";*/
 
 
 image_id_url_ts = [		//all these are 32x32
-	["grass", "./sprites/grass.png"],
+	["grass", "./sprites/grass32.png"],
 	//img id="tree", "/tree.png" style="display:none" /-->
 	["sword", "./sprites/sword.png"],
 	["bow", "./sprites/bow.png"],
@@ -26,7 +26,7 @@ image_id_url_ts = [		//all these are 32x32
 	["apple", "./sprites/apple.png"],
 	["stonewall", "./sprites/stonewall.png"],
 	["door", "./sprites/door.png"],
-	//["opendoor", "./sprites/opendoor.png"],	//except this one, but I'll replace it
+	["opendoor", "./sprites/opendoor.png"],	//even this one, which I've replaced
 	["water", "./sprites/water.png"],
 	
 	["bush", "./sprites/bush.png"], 
