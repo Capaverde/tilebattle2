@@ -250,6 +250,11 @@ image_id_url_other = [
 	["grayscale", "./sprites/grayscale.png"]
 ];
 
+image_add_temp_fix = [
+  ["warriorred_dead", "./sprites/sprites/warriorred_dead.png"],
+  ["woodentile", "./sprites/sprites/woodentile.png"]
+];
+
 
 var tileset_coor = {};
 
@@ -329,8 +334,8 @@ function loadimgs(image_id_url){
 			img.src = url;
 			img.id = id;
 			img.style.display = "none";
-			if (isLocal)
-				;	//if in Chrome, requests for different (file://) files will be considered cross-origin, tainting the canvas and impossibilitating things like getImageData
+			//if (isLocal)
+			//	;	//if in Chrome, requests for different (file://) files will be considered cross-origin, tainting the canvas and impossibilitating things like getImageData
 		})(img);
 	}
 }
@@ -345,4 +350,5 @@ if (typeof exports != "undefined"){
 } else {
 	//loadimgs(image_id_url_numbers);
 	loadimgs(image_id_url_other);
+   loadimgs(image_add_temp_fix);
 }

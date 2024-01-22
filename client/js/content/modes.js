@@ -17,6 +17,7 @@
 	var firtree = 22;
 	var branch = 23;
 	var tree = 35;
+ var woodtile = 51;
 	
 	//map snow
 	var snow = 24;
@@ -159,11 +160,14 @@ var modes = [
 
 			for (var ax=LX; ax<= RX; ax++){
 				for (var ay=LY; ay<=RY; ay++){
+    var tile=getTileH(ax,ay);
+    while (tile.length>0) tile.pop();
+    tile.push(createItem(woodtile, 1));
 					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
-						getTileH(ax, ay).push(createItem(14, 1));
+						tile.push(createItem(14, 1));
 					} else if (ax==RX && ay==MY){
-						getTileH(ax, ay).push(createItem(15, 1));
-					}
+						tile.push(createItem(15, 1));
+					} 
 				}
 			}
 
@@ -171,11 +175,14 @@ var modes = [
 
 			for (var ax=LX; ax<= RX; ax++){
 				for (var ay=LY; ay<=RY; ay++){
+    var tile=getTileH(ax,ay);
+    while (tile.length>0) tile.pop();
+    tile.push(createItem(woodtile, 1));
 					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==LX && ay==MY)){
-						getTileH(ax, ay).push(createItem(14, 1));
+						tile.push(createItem(14, 1));
 					} else if (ax==LX && ay==MY){
-						getTileH(ax, ay).push(createItem(15, 1));
-					}
+						tile.push(createItem(15, 1));
+					} 
 				}
 			}
 
@@ -225,11 +232,14 @@ var modes = [
 
 			for (var ax=LX; ax<= RX; ax++){
 				for (var ay=LY; ay<=RY; ay++){
+    var tile=getTileH(ax,ay);
+    while (tile.length>0) tile.pop();
+    tile.push(createItem(woodtile, 1));
 					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
-						getTileH(ax, ay).push(createItem(14, 1));
+						tile.push(createItem(14, 1));
 					} else if (ax==RX && ay==MY){
-						getTileH(ax, ay).push(createItem(15, 1));
-					}
+						tile.push(createItem(15, 1));
+					} 
 				}
 			}
 
@@ -237,11 +247,14 @@ var modes = [
 
 			for (var ax=LX; ax<= RX; ax++){
 				for (var ay=LY; ay<=RY; ay++){
+    var tile=getTileH(ax,ay);
+    while (tile.length>0) tile.pop();
+    tile.push(createItem(woodtile, 1));
 					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==LX && ay==MY)){
-						getTileH(ax, ay).push(createItem(14, 1));
+						tile.push(createItem(14, 1));
 					} else if (ax==LX && ay==MY){
-						getTileH(ax, ay).push(createItem(15, 1));
-					}
+						tile.push(createItem(15, 1));
+					} 
 				}
 			}
 		},
@@ -329,11 +342,14 @@ var modes = [
 
 			for (var ax=LX; ax<= RX; ax++){
 				for (var ay=LY; ay<=RY; ay++){
+    var tile=getTileH(ax,ay);
+    while (tile.length>0) tile.pop();
+    tile.push(createItem(woodtile, 1));
 					if ((ax==LX || ax==RX || ay==LY || ay == RY) && !(ax==RX && ay==MY)){
-						getTileH(ax, ay).push(createItem(14, 1));
+						tile.push(createItem(14, 1));
 					} else if (ax==RX && ay==MY){
-						getTileH(ax, ay).push(createItem(15, 1));
-					}
+						tile.push(createItem(15, 1));
+					} 
 				}
 			}
 

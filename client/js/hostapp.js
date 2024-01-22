@@ -936,7 +936,8 @@ function broadcast(name,data,conn){	//host
 						{id:47, blocking:false, movable: false, stackable: false, imgid: 47, onwalk: walkPoisonGas, field: 'poison'},	//poison gas
 						{id:48, blocking:true, movable: false, stackable: false, imgid: 48},	//void
 						{id:49, blocking:true, movable:false, stackable:false, imgid:49, onUse: onUseIncrement},	//lever	//onUse:..change imgid //uniqueOnUse at createUniqueItem
-						{id:50, blocking:true, movable:false, stackable:false, imgid:50, onUse: onUseDecrement}	//pulled lever
+						{id:50, blocking:true, movable:false, stackable:false, imgid:50, onUse: onUseDecrement},	//pulled lever
+     {id:51, blocking:false, movable:false, stackable: false, imgid:51}  //wooden tile
 					];
 
 						
@@ -1217,7 +1218,7 @@ function broadcast(name,data,conn){	//host
 		if (inworldH(pos)){
 			var tile = getTileH(pos);
 			var top = topItem(tile);
-			if (itemitype(top).onUse){
+			if (itemitype(top).onUse && rangepos(c.pos, pos) == 1){
 				if (top.onUse){	//unique (probably unmovable)
 					top.onUse(c, top, pos);		//ad hoc ordering, unpulled lever changes imgid only after its effect
 				}

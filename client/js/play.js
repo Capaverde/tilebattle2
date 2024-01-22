@@ -72,6 +72,7 @@
 	timer = "00:00";
 	blinkingtimer = false;
 	sync_d = false;
+ DISCONNECTED = false;
 	  
 	  
 	// Game vars
@@ -323,7 +324,8 @@
 			var i = Math.floor((TIME%(imglist[imgid].length*eff))/eff);
 			coor = imglist[imgid][i];
 		}
-		ctx.drawImage(coor.tileset, coor.x, coor.y, 32, 32, x, y, 32, 32);
+		//ctx.drawImage(coor.tileset, coor.x, coor.y, 32, 32, x, y, 32, 32);
+		drawImage(coor, x, y)
 		if (mouse)
 			console.log(imgid, coor.x, coor.y, x, y);
 	}
@@ -366,7 +368,11 @@
 				if(!tile) {
 					ctx.fillStyle="#000000"; 
 					ctx.fillRect((x+h)*32-OFFSET.x,(y+h)*32-OFFSET.y,32,32);
-					tile = []; //[48];	//void
+					if ( ((tx == -1 || tx==Wwidth) && ty >= -1 && ty <= Wheight) || ((ty==-1 || ty==Wheight) && tx>=-1 && tx<=Wwidth) )
+						tile = [14];	//14 for stone wall, 8 for magic wall
+					else
+						tile = []; //[48];	//void
+					
 				}
 				for (var k=0;k<tile.length;k+=1){
 					if (!tile[k].creature) {
@@ -1234,7 +1240,8 @@
 						{id:47,blocking:false,movable:false,stackable:false,imgid:47,animationdelay:250},	//poison gas
 						{id:48,blocking:true,movable:false,stackable:false,imgid:48,x_repeat:4,y_repeat:4},	//void tile
 						{id:49,blocking:true,movable:false,stackable:false,imgid:49,usable:true},	//lever
-						{id:50,blocking:true,movable:false,stackable:false,imgid:50,usable:true}	//pulled lever
+						{id:50,blocking:true,movable:false,stackable:false,imgid:50,usable:true},	//pulled lever
+     {id:51,blocking:false,movable:false,stackable:false,imgid:51,usable:false}	//wooden tile
 					];
 
 	typelist = [false,false,false,"weapon","weapon","ammo","weapon","weapon",false,"item","item","item",false,"item",false,false,false,false];
@@ -1250,6 +1257,7 @@
 	  
 	last_walk = 0;
 	function dirMove(dir){
+  if (DISCONNECTED) return;
 		if (hp > 0 && team != 0){
 			var time = getTime();
 			if (time - last_walk >= (dir < 4 ? WALK_DELAY : WALK_DIAGONAL)/speed){
@@ -2034,11 +2042,12 @@
 					[getElem("magicdust2"), getElem("magicdust3"), getElem("magicdust4")],		//45
 					getElem("poisonfieldrune"),	//46
 					[getElem("poisongas0"), getElem("poisongas1"), getElem("poisongas2"), getElem("poisongas3")],		//47
-					[getElem("void1"), getElem("void2"), getElem("void3"), getElem("void4"),getElem("void5"), getElem("void6"), getElem("void7"), getElem("void8"),
-					 		//getElem("void9"), getElem("void10"), getElem("void11"), getElem("void12"),getElem("void13"), getElem("void14"), getElem("void15"), getElem("void16")]		//48
-					//false,	//48
-					getElem("lever"),
-					getElem("lever_pulled")
+					//[getElem("void1"), getElem("void2"), getElem("void3"), getElem("void4"),getElem("void5"), getElem("void6"), getElem("void7"), getElem("void8"),
+					 //		getElem("void9"), getElem("void10"), getElem("void11"), getElem("void12"),getElem("void13"), getElem("void14"), getElem("void15"), getElem("void16")],		//48
+					false,	//48
+					getElem("lever"), //49
+					getElem("lever_pulled"), //50
+    getElem("woodentile")   //51
 				];
 					
 		setaleft = document.getElementById("setaleft");
@@ -2219,6 +2228,7 @@ makeSocketHeartbeater( socket );
 	
  socket.on('disconnect', function () {
   appendText("DISCONNECTED");
+  DISCONNECTED = true;
  });
 	
 	// Peer

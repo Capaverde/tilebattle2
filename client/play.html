@@ -34,6 +34,10 @@ html, body {
 <script src="./js/content/npcs.js"></script> 
 <script src="./js/hostapp.js"></script> 
 <script src="./js/peerapp.js"></script> 
+
+<!-- script src="//cdn.jsdelivr.net/npm/eruda"></script>
+<script>eruda.init();</script -->
+<!-- script src="https://cdn.jsdelivr.net/gh/SimonEast/MiniConsoleJS@main/console.js"></script -->
 </head> 
 <body> 
 <!--div id="header"> 		
@@ -133,6 +137,11 @@ f();
 } 		
 } 	
 } 	
+
+window.onerror = function (event, source, lineno, colno, error) {
+alert(error +" "+source+" "+lineno+","+colno) 
+
+};
 </script> 	 	 	 	
 <!--script src="/js/uihelper.js"></script--> 	
 <script> 	
